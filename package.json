@@ -26,5 +26,11 @@
   "bugs": {
     "url": "https://github.com/emiloberg/node-red-contrib-telldus/issues"
   },
-  "homepage": "https://github.com/emiloberg/node-red-contrib-telldus"
+  "homepage": "https://github.com/emiloberg/node-red-contrib-telldus",
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-debug": "^2.0.0",
+    "gulp-jshint": "^1.9.2",
+    "jshint-stylish": "^1.0.0"
+  }
 }

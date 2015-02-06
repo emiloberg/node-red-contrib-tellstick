@@ -82,9 +82,11 @@ module.exports = function(RED) {
 				var methods;
 				for (var i = 0; i < data.length; i++) {
 					methods = {};
+					/*jshint -W083 */
 					data[i].methods.forEach(function (method) {
 						methods[method.toLowerCase()] = true;
 					});
+					/*jshint +W083 */
 					data[i].methods = methods;
 				}
 
