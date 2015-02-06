@@ -1,0 +1,30 @@
+{
+  "name": "node-red-contrib-telldus",
+  "version": "0.0.1",
+  "description": "Send/receive data to/from a Tellstick. Switch light off/on, listen to sensors.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/emiloberg/node-red-contrib-telldus.git"
+  },
+  "keywords": [
+    "node-red",
+    "node-red-contrib",
+    "contrib",
+    "433",
+    "tellstick",
+    "telldus",
+    "duo",
+    "433Mhz"
+  ],
+  "node-red": {
+    "nodes": {
+      "telldus": "telldus/telldus.js"
+    }
+  },
+  "author": "Emil Oberg",
+  "license": "Apache",
+  "bugs": {
+    "url": "https://github.com/emiloberg/node-red-contrib-telldus/issues"
+  },
+  "homepage": "https://github.com/emiloberg/node-red-contrib-telldus"
+}
