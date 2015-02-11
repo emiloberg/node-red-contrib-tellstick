@@ -1,6 +1,4 @@
 <!--
-  Copyright 2013,2014 IBM Corp.
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
@@ -13,57 +11,6 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-
-<!-- ----------------------------------------------------------------------- ->
-    Telldus IN
-<- ------------------------------------------------------------------------ -->
-
-<script type="text/x-red" data-template-name="telldus-in">
-    <div class="form-row">
-        <label for="node-input-inputconfig"><i class="fa fa-signal"></i> Input</label>
-        <input type="text" id="node-input-inputconfig">
-    </div>
-    <div class="form-row">
-        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
-        <input type="text" id="node-input-name" placeholder="Name">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="telldus-in">
-    <p>Telldus IN</p>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('telldus-in',{
-        category: 'input',
-        defaults: {
-            name: {value:""},
-            inputconfig: {type:"telldus-inputs-config", required:true}
-        },
-        color:"#abd3ff",
-        inputs:0,
-        outputs:1,
-        icon: "bridge-dash.png",
-        label: function() {
-
-            var inputconfigNodeLabel = '';
-            if (this.inputconfig) {
-                var inputconfigNode = RED.nodes.node(this.inputconfig);
-                inputconfigNodeLabel = inputconfigNode.label();
-            }
-
-            return this.name || inputconfigNodeLabel || "telldus in";
-        },
-        labelStyle: function() {
-            return this.name?"node_label_italic":"";
-        }
-    });
-</script>
-
-
-<!-- ----------------------------------------------------------------------- ->
-    Telldus OUT
-<- ------------------------------------------------------------------------ -->
 
 <script type="text/x-red" data-template-name="telldus-out">
     <div class="form-row">
@@ -116,7 +63,7 @@
             return this.name?"node_label_italic":"";
         },
         oneditprepare: function() {
-            
+
             var node = this;
 
             /**
@@ -127,8 +74,8 @@
                 devices = data;
                 data.forEach(function (device) {
                     $('#node-input-device')
-                        .append($('<option>', { value : device.id })
-                        .text(device.name));
+                            .append($('<option>', { value : device.id })
+                                    .text(device.name));
                 });
                 $('#node-input-device option[value="' + node.device + '"]').prop('selected', true);
                 showHideMethods(node.device, node.method);
@@ -207,32 +154,6 @@
                     $('.node-input-dimvalue').hide();
                 }
             }
-        }        
-    });
-</script>
-
-<!-- ----------------------------------------------------------------------- ->
-    Telldus Config
-<- ------------------------------------------------------------------------ -->
-
-<script type="text/x-red" data-template-name="telldus-inputs-config">
-    <div class="form-row">
-        <label for="node-config-input-name"><i class="fa fa-tag"></i> Test</label>
-        <input type="text" id="node-config-input-name" placeholder="Test">
-    </div>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('telldus-inputs-config',{
-        category: 'config',
-        defaults: {
-            name: {
-                value: "",
-                required: true
-            }
-        },
-        label: function() {
-            return this.name || 'not set';
         }
     });
 </script>

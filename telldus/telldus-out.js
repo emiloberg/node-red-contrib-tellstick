@@ -1,5 +1,4 @@
 /**
- * Copyright 2013,2014 IBM Corp.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,38 +16,6 @@
 module.exports = function(RED) {
 	"use strict";
 
-
-
-
-
-
-
-	/**
-	 * Telldus Config
-	 *
-	 */
-	function TelldusInputsConfigNode(n) {
-		RED.nodes.createNode(this,n);
-		this.name = n.name;
-	}
-	RED.nodes.registerType("telldus-inputs-config", TelldusInputsConfigNode);
-
-	/**
-	 * Telldus In
-	 *
-	 */
-	function  TelldusInNode(n) {
-		RED.nodes.createNode(this,n);
-		this.name = n.name;
-		this.inputconfig = n.inputconfig;
-	}
-	RED.nodes.registerType("telldus-in", TelldusInNode);
-
-	/**
-	 *
-	 * Telldus OUT
-	 *
-	 */
 	function TelldusOutNode(n) {
 		RED.nodes.createNode(this,n);
 		this.name = n.name;
