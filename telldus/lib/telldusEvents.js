@@ -1,15 +1,16 @@
 "use strict";
 
 var EventEmitter = require("events").EventEmitter;
+var telldus = require('telldus');
 
 var isStarted = false;
 var events = new EventEmitter();
+var telldusStatus;
 
-function start(startedFrom) {
+function startListen() {
+
 	if (!isStarted) {
 		isStarted = true;
-		console.dir('Started the Telldus. ' + startedFrom);
-
 		/**
 		 * Listen to raw Telldus data
 		 *
@@ -19,21 +20,33 @@ function start(startedFrom) {
 		 *
 		 */
 		var debData = {};
-		var xtelldus = require('telldus');
-		var listener = xtelldus.addRawDeviceEventListener(function(controllerId, data) {
+		telldusStatus = telldus.addRawDeviceEventListener(function(controllerId, data) {
 			if (!debData.hasOwnProperty(data)) {
 				debData[data] = true;
 				events.emit("telldus-incoming", data);
+				//console.log('telldusStatus | Got data > ' + data);
 			}
 			setTimeout(function (prop) {
 				delete debData[prop];
 			}, 500, data);
 		});
-		
 	}
+}
+
+function getStatus() {
+	if(telldusStatus > 0) {
+		telldus.getErrorString(telldusStatus, function (err, errStr) {
+			return {
+				status: telldusStatus,
+				errStr: errStr
+			}
+		});
+	}
+	return { status: 0 }
 }
 
 
 
-module.exports.start = start;
+module.exports.startListen = startListen;
 module.exports.events = events;
+module.exports.getStatus = getStatus;

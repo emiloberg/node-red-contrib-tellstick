@@ -34,29 +34,21 @@
         }
 
         #incoming-transmission-wrapper {
-            margin-top: 1em;
-            width: calc(70% - 2em);
+            width: calc(80% - 2em);
             float: left;
             padding-left: 1em;
             margin-left: 1em;
         }
 
-        #incoming-transmission {
-            display: none;
-        }
-
         #listen-button-wrapper {
-            border-bottom: 1px solid #aaa;
-            padding-bottom: 1em;
             text-align: center;
         }
 
         .incoming-box {
-            max-height: 185px;
+            max-height: 360px;
             overflow: scroll;
-            border: 1px solid #dddddd;
-            padding: 0 0.5em 0 0.5em;
-            margin-bottom: 1em;
+            border-top: 1px solid #dddddd;
+            margin-top: 1em;
         }
 
         .transmission-table {
@@ -108,7 +100,7 @@
         }
 
         .manual-inputs {
-            width: 30%;
+            width: 20%;
             float: left;
         }
 
@@ -116,12 +108,13 @@
             width: calc(100% - 120px);
         }
 
-        .listen-button-stop {
+        .listen-button-listen {
             display: none;
         }
 
         .form-tips {
             clear: both;
+            max-width: calc(20% - 18px);
         }
 
     </style>
@@ -174,39 +167,25 @@
 
         <div id="listen-button-wrapper">
             <button type="button" id="telldus-listen" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
-                <span class="ui-button-text"><span class="listen-button-listen">Listen</span><span class="listen-button-stop"><i class="fa fa-spinner fa-spin"></i> Listening... Click to stop</span></span>
+                <span class="ui-button-text"><span class="listen-button-listen">Listen</span><span class="listen-button-stop"><i class="fa fa-spinner fa-spin"></i> Stop listening</span></span>
             </button>
         </div>
 
         <div id="incoming-transmission">
-            <h5>Commands</h5>
             <div class="incoming-box">
                 <table class="command-table transmission-table">
                     <thead>
                         <tr>
                             <th>&nbsp;</th>
+                            <th>&nbsp;</th>
                             <th>protocol</th>
                             <th>model</th>
+                            <th>id</th>
                             <th>house</th>
                             <th>group</th>
                             <th>unit</th>
                             <th>code</th>
                             <th>method</th>
-                            <th>other data</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-            <h5>Sensors</h5>
-            <div class="incoming-box">
-                <table class="sensor-table transmission-table">
-                    <thead>
-                        <tr>
-                            <th>&nbsp;</th>
-                            <th>protocol</th>
-                            <th>id</th>
-                            <th>model</th>
                             <th>other data</th>
                         </tr>
                     </thead>
@@ -239,18 +218,15 @@
             return this.name || 'not set';
         },
         oneditprepare: function() {
-
+            'use strict';
+            var node = this;
+            var isListening = true;
 
             function prettyPrintCode(codeStr) {
                 if (codeStr === undefined) {
                     return '';
                 }
-
-                var isBinary = /^[01]+$/.test(codeStr);
-                if (isBinary === false || codeStr == 0 || codeStr == 1) {
-                    return '<span class="telldus-code">' + codeStr + '</span>';
-                }
-                return '<span class="telldus-code">' + codeStr + '</span> (=' + parseInt(codeStr, 2) + ')';
+                return '<span class="telldus-code">' + codeStr + '</span>';
             }
 
             function printRemainingProperties(obj) {
@@ -260,7 +236,7 @@
                     html += '<td class="last">';
                     html += keys.map(function (key) {
                         return key + ': ' + prettyPrintCode(obj[key]);
-                    }).join(' | ');
+                    }).join('<br>');
                     html += '</td>';
                 } else {
                     html += '<td class="last">&nbsp;</td>';
@@ -268,20 +244,17 @@
                 return html;
             }
 
-            var node = this;
-            var isListening = false;
-
             // Increse dialog window size. This is not done all that beautiful...
             setTimeout(function () {
-                jqCurDialog = $("[aria-describedby='node-config-dialog']");
+                var jqCurDialog = $("[aria-describedby='node-config-dialog']");
                 var dialogWidth = ($(window).width() - 100);
                 if (dialogWidth > 1400) {
                     dialogWidth = 1400;
                 }
                 jqCurDialog.css('width', dialogWidth);
                 jqCurDialog.css('left', (($(window).width() - dialogWidth) / 2));
-                jqCurDialog.css('top', '50px');
-                jqCurDialog.css('min-height', ($(window).height() - 100));
+                jqCurDialog.css('top', (($(window).height() - 580) / 2));
+                jqCurDialog.css('min-height', '580px');
             }, 0);
 
             /**
@@ -291,106 +264,120 @@
                 // Empty any previous values
                 $('.device-property').val('');
 
-                data = $(this).data('data').split(';');
+                var data = $(this).data('data').split(';');
                 var dataObj = {};
                 data.forEach(function (kvp) {
                     $('#node-config-input-device' + kvp.split(':')[0]).val(kvp.split(':')[1]);
                 });
             });
 
+
+
+            // Print on incoming data
+            this.incomingData = function(topic, data) {
+
+                if (!isListening) { return; }
+
+                data = data.slice(0, -1);
+                var dataObj = {};
+                data.split(';').forEach(function (kvp) {
+                    dataObj[kvp.split(':')[0]] = kvp.split(':')[1];
+                });
+
+                var learnButtonIcon;
+                if (dataObj.class === 'command') {
+                    learnButtonIcon = 'fa-mobile';
+                } else if (dataObj.class === 'sensor') {
+                    learnButtonIcon = 'fa-bar-chart';
+                } else {
+                    learnButtonIcon = 'fa-bullseye';
+                }
+                        //
+
+                var html = '<tr>';
+                    html += '<td class="first">' +
+                    '<button data-data="' + data + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
+                    '<span class="ui-button-text">Learn</span>' +
+                    '</button>' +
+                    '</td>' +
+                    '<td>' + '<i class="fa ' + learnButtonIcon + '"></i>' + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.protocol) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.model) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.id) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.house) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.group) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.unit) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.code) + '</td>' +
+                    '<td>' + prettyPrintCode(dataObj.method) + '</td>' +
+
+                    delete dataObj.class;
+                    delete dataObj.protocol;
+                    delete dataObj.id;
+                    delete dataObj.group;
+                    delete dataObj.house;
+                    delete dataObj.method;
+                    delete dataObj.model;
+                    delete dataObj.unit;
+                    delete dataObj.code;
+                    html += printRemainingProperties(dataObj);
+                    html += '</tr>';
+                    $('.command-table tbody').prepend(html);
+            };
+
             /**
              * Listen
              */
+
+            RED.comms.subscribe("telldus-transmission", this.incomingData);
+            $.getJSON('telldus/listen', function(data) {
+                if (data.status > 0) {
+                    RED.notify('<strong>Telldus error</strong>: ' + data.errStr, 'error');
+                }
+            });
+
+
+            // Set up heartbeat, if hearbeat is lost, server will stop sending data.
+            this.telldusDeviceListenHeartbeatInterval = setInterval(function(){
+                $.getJSON('telldus/listen-heartbeat', function(data) {});
+            }, 3000);
+
+
+
             $('#telldus-listen').click(function () {
-
-                $('#incoming-transmission').show();
-
                 if (isListening) {
                     isListening = false;
-                    // todo, usubscribe doesn't seem to work, therefor checking 'if (!isListening) { return; }' further down.
-                    RED.comms.unsubscribe("telldus-transmission");
                     $('.listen-button-listen').show();
                     $('.listen-button-stop').hide();
-
                 } else {
                     isListening = true;
                     $('.listen-button-listen').hide();
                     $('.listen-button-stop').show();
-
-                    $.getJSON('telldus/listen', function(data) {
-                        if (data.hasOwnProperty('err')) {
-                            RED.notify('<strong>Telldus error</strong>: ' + data.err, 'error');
-                        }
-                    });
-
-                    RED.comms.subscribe("telldus-transmission", function(topic, data) {
-
-                        if (!isListening) { return; }
-
-                        data = data.slice(0, -1);
-                        var dataObj = {};
-                        data.split(';').forEach(function (kvp) {
-                            dataObj[kvp.split(':')[0]] = kvp.split(':')[1];
-                        });
-
-                        var html = '<tr>';
-                        if (dataObj.class === 'command') {
-//                            html += '<td class="first"><a href="#"><i class="fa fa-plus-square"></i> Learn</a></td>' +
-                            html += '<td class="first">' +
-                            '<button data-data="' + data + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
-                            '<span class="ui-button-text">Learn</span>' +
-                            '</button>' +
-                            '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.protocol) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.model) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.house) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.group) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.unit) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.code) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.method) + '</td>' +
-
-                            delete dataObj.class;
-                            delete dataObj.protocol;
-                            delete dataObj.group;
-                            delete dataObj.house;
-                            delete dataObj.method;
-                            delete dataObj.model;
-                            delete dataObj.unit;
-                            delete dataObj.code;
-                            html += printRemainingProperties(dataObj);
-                            html += '</tr>';
-                            $('.command-table tbody').prepend(html);
-                        } else {
-                            html += '<td class="first">' +
-                                        '<button data-data="' + data + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
-                                            '<span class="ui-button-text">Learn</span>' +
-                                        '</button>' +
-                                    '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.protocol) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.id) + '</td>' +
-                                    '<td>' + prettyPrintCode(dataObj.model) + '</td>' +
-                            delete dataObj.class;
-                            delete dataObj.protocol;
-                            delete dataObj.id;
-                            delete dataObj.model;
-                            html += printRemainingProperties(dataObj);
-                            html += '</tr>';
-                            $('.sensor-table tbody').prepend(html);
-                        }
-
-                    });
                 }
+            });
 
+
+
+            /**
+             * Node-RED does not count a click on the upper right hand X button as a cancel action
+             */
+            var that = this;
+            $('.ui-dialog-titlebar-close').click(function () {
+                clearInterval(that.telldusDeviceListenHeartbeatInterval);
+                RED.comms.unsubscribe("telldus-transmission", that.incomingData);
             });
 
 
 
         },
         oneditcancel: function() {
-            RED.comms.unsubscribe("telldus-transmission");
+            console.log('cancel');
+            clearInterval(this.telldusDeviceListenHeartbeatInterval);
+            RED.comms.unsubscribe("telldus-transmission", this.incomingData);
         },
         oneditsave: function() {
-            RED.comms.unsubscribe("telldus-transmission");
+            console.log('close');
+            clearInterval(this.telldusDeviceListenHeartbeatInterval);
+            RED.comms.unsubscribe("telldus-transmission", this.incomingData);
         }
     });
 </script>

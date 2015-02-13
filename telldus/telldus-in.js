@@ -27,8 +27,11 @@ module.exports = function(RED) {
 		this.name = n.name;
 		this.inputconfig = n.inputconfig;
 
+		var node = this;
+
 		var incomingData = function (data) {
-			console.log(n.name + " | IN | event has occured: " + data);
+			//console.log(n.name + " | IN | event has occured: " + data);
+			node.send(data);
 		};
 
 		telldusShared.events.on("telldus-incoming", incomingData);
