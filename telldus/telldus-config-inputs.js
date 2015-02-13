@@ -15,13 +15,18 @@
 
 
 module.exports = function(RED) {
-	"use strict";
+	'use strict';
 
 	var telldusShared = require('./lib/telldusEvents.js');
-	var deviceListenHeartbeat;
 
+	var deviceListenHeartbeat;
+	var heartbeatInterval = null;
+
+	/**
+	 * Create node
+	 */
 	function TelldusInputsConfigNode(n) {
-		RED.nodes.createNode(this,n);
+		RED.nodes.createNode(this, n);
 		this.name = n.name;
 		this.deviceclass = n.deviceclass;
 		this.deviceprotocol = n.deviceprotocol;
@@ -33,55 +38,67 @@ module.exports = function(RED) {
 		this.devicecode = n.devicecode;
 		this.deviceid = n.deviceid;
 
-		// Start Event Emitter.
-		telldusShared.startListen();
+		telldusShared.startEmittingData();
 	}
-	RED.nodes.registerType("telldus-config-inputs", TelldusInputsConfigNode);
+	RED.nodes.registerType('telldus-config-inputs', TelldusInputsConfigNode);
 
 
-	
-	RED.httpAdmin.get("/telldus/listen",function(req,res) {
+	/**
+	 * Send telldus data to client
+	 */
+	var wsSendDataToClient = function (data) {
+		RED.comms.publish('telldus-transmission', data);
+	};
 
-		////var tempMsg = 'class:command;protocol:myprot;model:mymodel;house:1234;unit:1;code:101101;method:turnon;';
-		////RED.comms.publish('telldus-transmission', tempMsg);
 
-		// Listen to incoming Telldus data and send it to the browser over WebSockets.
-		var throttleLimit = 300;
-		var throttleData = {};
-		var incomingData = function (data) {
-			if (!throttleData.hasOwnProperty(data)) {
-				throttleData[data] = true;
-				RED.comms.publish("telldus-transmission",data);
-				console.log('Inputs        | Got data > ' + data);
-			}
-			setTimeout(function (prop) {
-				delete throttleData[prop];
-			}, throttleLimit, data);
-		};
-		telldusShared.events.on("telldus-incoming", incomingData);
+	/**
+	 * Start sending incoming telldus data to the client when the client
+	 * ask us to.
+	 */
+	RED.httpAdmin.get('/telldus/send-raw-data-over-ws/start', function(req, res) {
 
-		// Send Telldus Status as JSON Response
+		//var tempMsg = 'class:command;protocol:myprot;model:mymodel;house:1234;unit:1;code:101101;method:turnon;';
+		//RED.comms.publish('telldus-transmission', tempMsg);
+		telldusShared.events.on('telldus-incoming', wsSendDataToClient);
+
 		res.writeHead(200, {'Content-Type': 'application/json'});
 		res.write(JSON.stringify(telldusShared.getStatus()));
 		res.end();
 
-		// Check if connection is alive
+		/**
+		 * Start the heartbeat checker. If client hasn't given us a heartbeat
+		 * in more than X seconds, treat the connection as dead and stop
+		 * sending data to it.
+		 */
 		deviceListenHeartbeat = new Date().getTime();
-		var heartbeatInterval = setInterval(function(){
+		heartbeatInterval = setInterval(function(){
 			var timeSinceLastHB = new Date().getTime() - deviceListenHeartbeat;
-
 			if (timeSinceLastHB > 3500) {
 				console.log('Lost Heartbeat, closing');
-				telldusShared.events.removeAllListeners('telldus-incoming');
+				telldusShared.events.removeListener('telldus-incoming', wsSendDataToClient);
 				clearInterval(heartbeatInterval);
 			}
 		}, 3000);
 	});
 
-	RED.httpAdmin.get("/telldus/listen-heartbeat",function(req,res) {
+
+	/**
+	 * Register heartbeat when client send us one.
+	 */
+	RED.httpAdmin.get('/telldus/send-raw-data-over-ws/heartbeat', function(req, res) {
 		deviceListenHeartbeat = new Date().getTime();
 		res.writeHead(200, {'Content-Type': 'application/json'});
 		res.end();
 	});
 
+
+	/**
+	 * Stop sending data when client ask us to
+	 */
+	RED.httpAdmin.get('/telldus/send-raw-data-over-ws/stop', function(req, res) {
+		telldusShared.events.removeListener('telldus-incoming', wsSendDataToClient);
+		clearInterval(heartbeatInterval);
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.end();
+	});
 };

@@ -14,21 +14,21 @@
  **/
 
 module.exports = function(RED) {
-	"use strict";
+	'use strict';
 
 	function TelldusOutNode(n) {
-		RED.nodes.createNode(this,n);
+		RED.nodes.createNode(this, n);
 		this.name = n.name;
-		this.device = n.device || "";
-		this.method = n.method || "";
-		this.dimvalue = n.dimvalue || "";
-		this.devicefriendlyname = n.devicefriendlyname || "";
+		this.device = n.device || '';
+		this.method = n.method || '';
+		this.dimvalue = n.dimvalue || '';
+		this.devicefriendlyname = n.devicefriendlyname || '';
 	}
-	RED.nodes.registerType("telldus-out",TelldusOutNode);
+	RED.nodes.registerType('telldus-out', TelldusOutNode);
 
 
 	// Kolla hardware/35-arduino.js
-	RED.httpAdmin.get("/telldus/devices",function(req,res) {
+	RED.httpAdmin.get('/telldus/devices', function(req, res) {
 		res.writeHead(200, {'Content-Type': 'application/json'});
 
 
@@ -49,11 +49,11 @@ module.exports = function(RED) {
 				var methods;
 				for (var i = 0; i < data.length; i++) {
 					methods = {};
-					/*jshint -W083 */
+					/*eslint-disable no-loop-func */
 					data[i].methods.forEach(function (method) {
 						methods[method.toLowerCase()] = true;
 					});
-					/*jshint +W083 */
+					/*eslint-enable no-loop-func */
 					data[i].methods = methods;
 				}
 

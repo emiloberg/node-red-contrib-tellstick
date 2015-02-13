@@ -197,54 +197,44 @@
 </script>
 
 <script type="text/javascript">
+    // Todo, check all jQuery selectors, they will catch _ALL_ nodes, not just this one.
     RED.nodes.registerType('telldus-config-inputs',{
         category: 'config',
         defaults: {
-            name: {
-                value: "",
-                required: true
-            },
-            deviceclass: {value: ""},
-            deviceprotocol: {value: ""},
-            devicegroup: {value: ""},
-            devicehouse: {value: ""},
-            devicemethod: {value: ""},
-            devicemodel: {value: ""},
-            deviceunit: {value: ""},
-            devicecode: {value: ""},
-            deviceid: {value: ""}
+            name:           { value: '', required: true},
+            deviceclass:    { value: ''},
+            deviceprotocol: { value: ''},
+            devicegroup:    { value: ''},
+            devicehouse:    { value: ''},
+            devicemethod:   { value: ''},
+            devicemodel:    { value: ''},
+            deviceunit:     { value: ''},
+            devicecode:     { value: ''},
+            deviceid:       { value: ''}
         },
         label: function() {
             return this.name || 'not set';
         },
         oneditprepare: function() {
             'use strict';
-            var node = this;
             var isListening = true;
 
-            function prettyPrintCode(codeStr) {
+
+            /**
+             * Make data values in the table a little prettier.
+             */
+            function printPrettyValue(codeStr) {
                 if (codeStr === undefined) {
                     return '';
                 }
                 return '<span class="telldus-code">' + codeStr + '</span>';
             }
 
-            function printRemainingProperties(obj) {
-                var html = '';
-                var keys = Object.keys(obj);
-                if (keys.length > 0) {
-                    html += '<td class="last">';
-                    html += keys.map(function (key) {
-                        return key + ': ' + prettyPrintCode(obj[key]);
-                    }).join('<br>');
-                    html += '</td>';
-                } else {
-                    html += '<td class="last">&nbsp;</td>';
-                }
-                return html;
-            }
 
-            // Increse dialog window size. This is not done all that beautiful...
+            /**
+             * Increase dialog window size. This is not done all that beautiful
+             * but we need a bigger window to play with.
+             */
             setTimeout(function () {
                 var jqCurDialog = $("[aria-describedby='node-config-dialog']");
                 var dialogWidth = ($(window).width() - 100);
@@ -257,92 +247,13 @@
                 jqCurDialog.css('min-height', '580px');
             }, 0);
 
-            /**
-             * Click on 'Learn'
-             */
-            $('body').on('click', '.learn-button', function() {
-                // Empty any previous values
-                $('.device-property').val('');
-
-                var data = $(this).data('data').split(';');
-                var dataObj = {};
-                data.forEach(function (kvp) {
-                    $('#node-config-input-device' + kvp.split(':')[0]).val(kvp.split(':')[1]);
-                });
-            });
-
-
-
-            // Print on incoming data
-            this.incomingData = function(topic, data) {
-
-                if (!isListening) { return; }
-
-                data = data.slice(0, -1);
-                var dataObj = {};
-                data.split(';').forEach(function (kvp) {
-                    dataObj[kvp.split(':')[0]] = kvp.split(':')[1];
-                });
-
-                var learnButtonIcon;
-                if (dataObj.class === 'command') {
-                    learnButtonIcon = 'fa-mobile';
-                } else if (dataObj.class === 'sensor') {
-                    learnButtonIcon = 'fa-bar-chart';
-                } else {
-                    learnButtonIcon = 'fa-bullseye';
-                }
-                        //
-
-                var html = '<tr>';
-                    html += '<td class="first">' +
-                    '<button data-data="' + data + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
-                    '<span class="ui-button-text">Learn</span>' +
-                    '</button>' +
-                    '</td>' +
-                    '<td>' + '<i class="fa ' + learnButtonIcon + '"></i>' + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.protocol) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.model) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.id) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.house) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.group) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.unit) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.code) + '</td>' +
-                    '<td>' + prettyPrintCode(dataObj.method) + '</td>' +
-
-                    delete dataObj.class;
-                    delete dataObj.protocol;
-                    delete dataObj.id;
-                    delete dataObj.group;
-                    delete dataObj.house;
-                    delete dataObj.method;
-                    delete dataObj.model;
-                    delete dataObj.unit;
-                    delete dataObj.code;
-                    html += printRemainingProperties(dataObj);
-                    html += '</tr>';
-                    $('.command-table tbody').prepend(html);
-            };
 
             /**
-             * Listen
+             * Faux stop/start listening. We do actually not stop listening
+             * when the user clicks to do so. Rather we're setting isListening to
+             * false and then just stop printing data to the table if that is set
+             * to false. No need to start/stop the actual listening.
              */
-
-            RED.comms.subscribe("telldus-transmission", this.incomingData);
-            $.getJSON('telldus/listen', function(data) {
-                if (data.status > 0) {
-                    RED.notify('<strong>Telldus error</strong>: ' + data.errStr, 'error');
-                }
-            });
-
-
-            // Set up heartbeat, if hearbeat is lost, server will stop sending data.
-            this.telldusDeviceListenHeartbeatInterval = setInterval(function(){
-                $.getJSON('telldus/listen-heartbeat', function(data) {});
-            }, 3000);
-
-
-
             $('#telldus-listen').click(function () {
                 if (isListening) {
                     isListening = false;
@@ -356,28 +267,128 @@
             });
 
 
-
             /**
-             * Node-RED does not count a click on the upper right hand X button as a cancel action
+             * Move command/sensor data from table to input fields
+             * when user clicks on "Learn" button.
              */
-            var that = this;
-            $('.ui-dialog-titlebar-close').click(function () {
-                clearInterval(that.telldusDeviceListenHeartbeatInterval);
-                RED.comms.unsubscribe("telldus-transmission", that.incomingData);
+            $('body').on('click', '.learn-button', function() {
+                // Empty any previous values
+                $('.device-property').val('');
+
+                var data = $(this).data('data').split(';');
+                data.forEach(function (kvp) {
+                    $('#node-config-input-device' + kvp.split(':')[0]).val(kvp.split(':')[1]);
+                });
             });
 
 
+            /**
+             * Print all incoming data to the table
+             */
+            this.incomingData = function(topic, rawdata) {
+                if (!isListening) { return; }
 
+                rawdata = rawdata.slice(0, -1);
+                var data = {};
+                rawdata.split(';').forEach(function (kvp) {
+                    data[kvp.split(':')[0]] = kvp.split(':')[1];
+                });
+
+                var learnButtonIcon;
+                if (data.class === 'command') {
+                    learnButtonIcon = 'fa-mobile';
+                } else if (data.class === 'sensor') {
+                    learnButtonIcon = 'fa-bar-chart';
+                } else {
+                    learnButtonIcon = 'fa-bullseye';
+                }
+
+                var html = '<tr>' +
+                    '<td class="first">' +
+                    '<button data-data="' + rawdata + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
+                    '<span class="ui-button-text">Learn</span>' +
+                    '</button>' +
+                    '</td>' +
+                    '<td>' + '<i class="fa ' + learnButtonIcon + '"></i>' + '</td>' +
+                    '<td>' + printPrettyValue(data.protocol) + '</td>' +
+                    '<td>' + printPrettyValue(data.model) + '</td>' +
+                    '<td>' + printPrettyValue(data.id) + '</td>' +
+                    '<td>' + printPrettyValue(data.house) + '</td>' +
+                    '<td>' + printPrettyValue(data.group) + '</td>' +
+                    '<td>' + printPrettyValue(data.unit) + '</td>' +
+                    '<td>' + printPrettyValue(data.code) + '</td>' +
+                    '<td>' + printPrettyValue(data.method) + '</td>';
+
+                delete data.class;
+                delete data.protocol;
+                delete data.id;
+                delete data.group;
+                delete data.house;
+                delete data.method;
+                delete data.model;
+                delete data.unit;
+                delete data.code;
+                if (Object.keys(data).length > 0) {
+                    html += '<td class="last">';
+                    html += Object.keys(data).map(function (key) {
+                        return key + ': ' + printPrettyValue(data[key]);
+                    }).join('<br>');
+                    html += '</td>';
+                } else {
+                    html += '<td class="last">&nbsp;</td>';
+                }
+
+
+                html += '</tr>';
+
+                $('.command-table tbody').prepend(html);
+            };
+
+
+            /**
+             * Ask server to start sending incmming radio data to browser,
+             * over websockets. And start listening to WebSockets.
+             */
+            RED.comms.subscribe("telldus-transmission", this.incomingData);
+            $.getJSON('telldus/send-raw-data-over-ws/start', function(data) {
+                if (data.status > 0) {
+                    RED.notify('<strong>Telldus error</strong>: ' + data.errStr, 'error');
+                }
+            });
+
+
+            /**
+             * Start sending a heartbeat to the server. If server don't get heartbeat
+             * it will stop sending data over WebSockets.
+             */
+            this.telldusDeviceListenHeartbeatInterval = setInterval(function(){
+                $.getJSON('telldus/send-raw-data-over-ws/heartbeat', function(data) {});
+            }, 3000);
+
+
+            /**
+             * When dialog is closed:
+             * - Tell server to stop sending data over WebSockets
+             * - Stop listening top WebSockets
+             * - Stop sending heartbeats to server.
+             */
+            this.shutdownConnections = function(){
+                $.getJSON('telldus/send-raw-data-over-ws/stop', function(data) {});
+                clearInterval(this.telldusDeviceListenHeartbeatInterval);
+                RED.comms.unsubscribe("telldus-transmission", this.incomingData);
+            }
         },
         oneditcancel: function() {
-            console.log('cancel');
-            clearInterval(this.telldusDeviceListenHeartbeatInterval);
-            RED.comms.unsubscribe("telldus-transmission", this.incomingData);
+            this.shutdownConnections();
         },
         oneditsave: function() {
-            console.log('close');
-            clearInterval(this.telldusDeviceListenHeartbeatInterval);
-            RED.comms.unsubscribe("telldus-transmission", this.incomingData);
+            this.shutdownConnections();
+        },
+        ondelete: function() { // todo: remove this. ondelete will be deprecated in favor of oneditdelete. https://github.com/node-red/node-red/issues/561#issuecomment-74238250
+            this.shutdownConnections();
+        },
+        oneditdelete: function() {
+            this.shutdownConnections();
         }
     });
 </script>
