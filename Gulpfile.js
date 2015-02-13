@@ -1,10 +1,19 @@
-var jshint = require('gulp-jshint');
-var gulp   = require('gulp');
-var debug = require('gulp-debug');
+'use strict';
 
-gulp.task('lint', function() {
-  return gulp.src('./telldus/*.js')
-	.pipe(debug())
-    .pipe(jshint())
-    .pipe(jshint.reporter('jshint-stylish'));
+
+
+var gulp = require('gulp');
+var eslint = require('gulp-eslint');
+var debug	= require('gulp-debug');
+ 
+gulp.task('lint', function () {
+    return gulp.src(['telldus/*.js', 'telldus/lib/*.js'])
+        .pipe(debug())
+        .pipe(eslint())
+        .pipe(eslint.format())
+        .pipe(eslint.failOnError());
+});
+ 
+gulp.task('default', ['lint'], function () {
+    // This will only run if the lint task is successful... 
 });
