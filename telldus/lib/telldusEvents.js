@@ -1,3 +1,4 @@
+
 'use strict';
 
 var EventEmitter = require('events').EventEmitter;
@@ -23,7 +24,6 @@ function startEmittingData() {
 			if (!debData.hasOwnProperty(data)) {
 				debData[data] = true;
 				events.emit('telldus-incoming', data);
-				//console.log('telldusStatus | Got data > ' + data);
 			}
 			setTimeout(function (prop) {
 				delete debData[prop];
