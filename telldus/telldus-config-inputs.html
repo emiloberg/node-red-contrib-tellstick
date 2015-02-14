@@ -227,6 +227,23 @@
 
 
             /**
+             * This is am ugly hack which needs to be fixed!
+             *
+             * For some reason, when creating a _new_ config,
+             * we can't reach 'this'. Therefor we're (for now)
+             * polluting the window object by attaching a few
+             * methods there.
+             *
+             * To recreate the non-working thing; replace
+             * 'window.telldus' with 'this' in this file, and
+             * then open Node-RED, click input node and select
+             * to create a new config. Press cancel and you'll
+             * get an error in your browser console saying that
+             * the methods doesn't exist on 'this'.
+             */
+            window.telldus = window.telldus || {};
+
+            /**
              * Make data values in the table a little prettier.
              */
             function printPrettyValue(codeStr) {
@@ -299,7 +316,7 @@
             /**
              * Print all incoming data to the table
              */
-            this.incomingData = function(topic, rawdata) {
+            window.telldus.incomingData = function(topic, rawdata) {
                 if (!isListening) { return; }
 
                 rawdata = rawdata.slice(0, -1);
@@ -363,7 +380,7 @@
              * Ask server to start sending incmming radio data to browser,
              * over websockets. And start listening to WebSockets.
              */
-            RED.comms.subscribe("telldus-transmission", this.incomingData);
+            RED.comms.subscribe("telldus-transmission", window.telldus.incomingData);
             $.getJSON('telldus/send-raw-data-over-ws/start', function(data) {
                 if (data.status > 0) {
                     RED.notify('<strong>Telldus error</strong>: ' + data.errStr, 'error');
@@ -375,7 +392,7 @@
              * Start sending a heartbeat to the server. If server don't get heartbeat
              * it will stop sending data over WebSockets.
              */
-            this.telldusDeviceListenHeartbeatInterval = setInterval(function(){
+            window.telldus.telldusDeviceListenHeartbeatInterval = setInterval(function(){
                 $.getJSON('telldus/send-raw-data-over-ws/heartbeat', function(data) {});
             }, 3000);
 
@@ -386,23 +403,25 @@
              * - Stop listening top WebSockets
              * - Stop sending heartbeats to server.
              */
-            this.shutdownConnections = function(){
+            window.telldus.shutdownConnections = function(){
                 $.getJSON('telldus/send-raw-data-over-ws/stop', function(data) {});
-                clearInterval(this.telldusDeviceListenHeartbeatInterval);
-                RED.comms.unsubscribe("telldus-transmission", this.incomingData);
-            }
+                clearInterval(window.telldus.telldusDeviceListenHeartbeatInterval);
+                RED.comms.unsubscribe("telldus-transmission", window.telldus.incomingData);
+            };
+
+
         },
         oneditcancel: function() {
-            this.shutdownConnections();
+            window.telldus.shutdownConnections();
         },
         oneditsave: function() {
-            this.shutdownConnections();
+            window.telldus.shutdownConnections();
         },
         ondelete: function() { // todo: remove this. ondelete will be deprecated in favor of oneditdelete. https://github.com/node-red/node-red/issues/561#issuecomment-74238250
-            this.shutdownConnections();
+            window.telldus.shutdownConnections();
         },
         oneditdelete: function() {
-            this.shutdownConnections();
+            window.telldus.shutdownConnections();
         }
     });
 </script>
