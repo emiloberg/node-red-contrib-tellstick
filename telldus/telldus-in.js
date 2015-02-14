@@ -50,7 +50,14 @@ module.exports = function(RED) {
 			data = data.slice(0, -1);
 			var dataObj = {};
 			data.split(';').forEach(function (kvp) {
-				dataObj[kvp.split(':')[0]] = kvp.split(':')[1];
+				var key = kvp.split(':')[0];
+				var val = kvp.split(':')[1];
+				var maybeNumber = parseFloat(val);
+				if (isNaN(maybeNumber)) {
+					dataObj[key] = val;
+				} else {
+					dataObj[key] = maybeNumber;
+				}
 			});
 
 			var isMatch = true;
