@@ -27,18 +27,19 @@ module.exports = function(RED) {
 		var node = this;
 
 		/**
+		 * Check if str is number.
+		 * @param str
+		 * @returns {boolean}
+		 */
+		function isNumber(str) {
+			return (typeof str === 'number' && (str % 1) === 0);
+		}
+
+
+		/**
 		 * On Input
 		 */
 		this.on('input', function(incomingMsg) {
-
-			/**
-			 * Check if str is number.
-			 * @param str
-			 * @returns {boolean}
-			 */
-			function isNumber(str) {
-				return (typeof str === 'number' && (str % 1) === 0);
-			}
 
 
 			/**
@@ -105,7 +106,7 @@ module.exports = function(RED) {
 			 * Convert 'dim to 0' to 'turnoff'
 			 */
 			if (msg.method === 2 && msg.dimlevel === 0) {
-				msg.methord = 0;
+				msg.method = 0;
 			}
 
 
