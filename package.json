@@ -18,7 +18,9 @@
   ],
   "node-red": {
     "nodes": {
-      "telldus": "telldus/telldus-config-inputs.js"
+      "telldus-in": "telldus/telldus-in.js",
+      "telldus-out": "telldus/telldus-out.js",
+      "telldus-input": "telldus/telldus-input.js"
     }
   },
   "author": "Emil Oberg",

@@ -22,7 +22,7 @@ module.exports = function(RED) {
 
 		telldusShared.startEmittingData();
 	}
-	RED.nodes.registerType('telldus-config-inputs', TelldusInputsConfigNode);
+	RED.nodes.registerType('telldus-input', TelldusInputsConfigNode);
 
 
 	/**
