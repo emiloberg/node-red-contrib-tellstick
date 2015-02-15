@@ -22,6 +22,11 @@ module.exports = function(RED) {
 		this.name = n.name;
 		this.inputconfig = n.inputconfig;
 
+		if (n.inputconfig === undefined) {
+			this.status({fill: 'yellow', shape: 'ring', text: 'No input deployed'});
+			return;
+		}
+
 		this.configNode = RED.nodes.getNode(n.inputconfig);
 		this.matchRules = {
 			class: this.configNode.deviceclass || '',
