@@ -19,6 +19,9 @@ module.exports = function(RED) {
 
 	function TelldusInNode(n) {
 		RED.nodes.createNode(this, n);
+
+		telldusShared.startEmittingData();
+
 		this.name = n.name;
 		this.inputconfig = n.inputconfig;
 

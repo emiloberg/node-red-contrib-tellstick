@@ -19,8 +19,6 @@ module.exports = function(RED) {
 		this.deviceunit = n.deviceunit;
 		this.devicecode = n.devicecode;
 		this.deviceid = n.deviceid;
-
-		telldusShared.startEmittingData();
 	}
 	RED.nodes.registerType('telldus-input', TelldusInputsConfigNode);
 
