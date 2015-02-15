@@ -8,6 +8,15 @@ module.exports = function(RED) {
 	 */
 	var telldusShared = require('./lib/telldusEvents.js');
 
+	function makeNumberIntoRealNumber(str) {
+		var maybeNumber = parseFloat(str);
+		if (isNaN(maybeNumber)) {
+			return str;
+		} else {
+			return maybeNumber;
+		}
+	}
+
 	function TelldusInNode(n) {
 		RED.nodes.createNode(this, n);
 		this.name = n.name;
@@ -16,14 +25,14 @@ module.exports = function(RED) {
 		this.configNode = RED.nodes.getNode(n.inputconfig);
 		this.matchRules = {
 			class: this.configNode.deviceclass || '',
-			protocol: this.configNode.deviceprotocol || '',
-			group: this.configNode.devicegroup || '',
-			house: this.configNode.devicehouse || '',
-			method: this.configNode.devicemethod || '',
-			model: this.configNode.devicemodel || '',
-			unit: this.configNode.deviceunit || '',
-			code: this.configNode.devicecode || '',
-			id: this.configNode.deviceid || ''
+			protocol: makeNumberIntoRealNumber(this.configNode.deviceprotocol) || null,
+			group: makeNumberIntoRealNumber(this.configNode.devicegroup) || null,
+			house: makeNumberIntoRealNumber(this.configNode.devicehouse) || null,
+			method: makeNumberIntoRealNumber(this.configNode.devicemethod) || null,
+			model: makeNumberIntoRealNumber(this.configNode.devicemodel) || null,
+			unit: makeNumberIntoRealNumber(this.configNode.deviceunit) || null,
+			code: makeNumberIntoRealNumber(this.configNode.devicecode) || null,
+			id: makeNumberIntoRealNumber(this.configNode.deviceid) || null
 		};
 
 
@@ -39,7 +48,6 @@ module.exports = function(RED) {
 
 		var node = this;
 
-
 		/**
 		 *  See if the incoming data is matching the rule for
 		 *  this node and if so, send all data as a node.send.
@@ -47,22 +55,16 @@ module.exports = function(RED) {
 		 * @param {string} data Incoming raw telldus data.
 		 */
 		var checkAndSendData = function (data) {
+
 			data = data.slice(0, -1);
 			var dataObj = {};
 			data.split(';').forEach(function (kvp) {
-				var key = kvp.split(':')[0];
-				var val = kvp.split(':')[1];
-				var maybeNumber = parseFloat(val);
-				if (isNaN(maybeNumber)) {
-					dataObj[key] = val;
-				} else {
-					dataObj[key] = maybeNumber;
-				}
+				dataObj[kvp.split(':')[0]] = makeNumberIntoRealNumber(kvp.split(':')[1]);
 			});
 
 			var isMatch = true;
 			Object.keys(node.matchRules).forEach(function (key) {
-				if (node.matchRules[key].length > 0) {
+				if (node.matchRules[key] !== null) {
 					if (node.matchRules[key] !== dataObj[key]) {
 						isMatch = false;
 					}

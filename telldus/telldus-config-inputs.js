@@ -4,9 +4,6 @@ module.exports = function(RED) {
 
 	var telldusShared = require('./lib/telldusEvents.js');
 
-	var deviceListenHeartbeat;
-	var heartbeatInterval = null;
-
 	/**
 	 * Create node
 	 */
@@ -34,56 +31,7 @@ module.exports = function(RED) {
 	var wsSendDataToClient = function (data) {
 		RED.comms.publish('telldus-transmission', data);
 	};
+	telldusShared.events.on('telldus-incoming', wsSendDataToClient);
 
 
-	/**
-	 * Start sending incoming telldus data to the client when the client
-	 * ask us to.
-	 */
-	RED.httpAdmin.get('/telldus/send-raw-data-over-ws/start', function(req, res) {
-
-		//var tempMsg = 'class:command;protocol:myprot;model:mymodel;house:1234;unit:1;code:101101;method:turnon;';
-		//RED.comms.publish('telldus-transmission', tempMsg);
-		telldusShared.events.on('telldus-incoming', wsSendDataToClient);
-
-		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.write(JSON.stringify(telldusShared.getStatus()));
-		res.end();
-
-		/**
-		 * Start the heartbeat checker. If client hasn't given us a heartbeat
-		 * in more than X seconds, treat the connection as dead and stop
-		 * sending data to it.
-		 */
-		deviceListenHeartbeat = new Date().getTime();
-		heartbeatInterval = setInterval(function(){
-			var timeSinceLastHB = new Date().getTime() - deviceListenHeartbeat;
-			if (timeSinceLastHB > 3500) {
-				console.log('Lost Heartbeat, closing');
-				telldusShared.events.removeListener('telldus-incoming', wsSendDataToClient);
-				clearInterval(heartbeatInterval);
-			}
-		}, 3000);
-	});
-
-
-	/**
-	 * Register heartbeat when client send us one.
-	 */
-	RED.httpAdmin.get('/telldus/send-raw-data-over-ws/heartbeat', function(req, res) {
-		deviceListenHeartbeat = new Date().getTime();
-		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.end();
-	});
-
-
-	/**
-	 * Stop sending data when client ask us to
-	 */
-	RED.httpAdmin.get('/telldus/send-raw-data-over-ws/stop', function(req, res) {
-		telldusShared.events.removeListener('telldus-incoming', wsSendDataToClient);
-		clearInterval(heartbeatInterval);
-		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.end();
-	});
 };

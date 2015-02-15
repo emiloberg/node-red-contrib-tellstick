@@ -219,31 +219,11 @@
             deviceid:       { value: ''}
         },
         label: function() {
-            return this.name || 'not set';
+            return this.name || 'Unnamed';
         },
         oneditprepare: function() {
             'use strict';
             var isListening = true;
-
-
-            /**
-             * This is am ugly hack which needs to be fixed!
-             *
-             * For some reason, when creating a _new_ config,
-             * we can't reach 'this'. Therefor we're (for now)
-             * polluting the window object by attaching a few
-             * methods there.
-             *
-             * To recreate the non-working thing; replace
-             * 'window.telldus' with 'this' in this file, and
-             * then open Node-RED, click input node and select
-             * to create a new config. Press cancel and you'll
-             * get an error in your browser console saying that
-             * the methods doesn't exist on 'this'.
-             *
-             * See what's done in commit 6cb3254.
-             */
-            window.telldus = window.telldus || {};
 
             /**
              * Make data values in the table a little prettier.
@@ -317,8 +297,14 @@
 
             /**
              * Print all incoming data to the table
-             */
-            window.telldus.incomingData = function(topic, rawdata) {
+             *
+             * For some reason, when creating a _new_ config,
+             * we can't reach 'this' when unloading, Therefor
+             * we're (for now) polluting the window object by
+             * attaching a few the listener there.
+            */
+            window.telldus = window.telldus || {};
+            window.telldus.inputConfigListener = function(topic, rawdata) {
                 if (!isListening) { return; }
 
                 rawdata = rawdata.slice(0, -1);
@@ -382,48 +368,28 @@
              * Ask server to start sending incmming radio data to browser,
              * over websockets. And start listening to WebSockets.
              */
-            RED.comms.subscribe("telldus-transmission", window.telldus.incomingData);
-            $.getJSON('telldus/send-raw-data-over-ws/start', function(data) {
-                if (data.status > 0) {
-                    RED.notify('<strong>Telldus error</strong>: ' + data.errStr, 'error');
-                }
-            });
+            RED.comms.subscribe("telldus-transmission", window.telldus.inputConfigListener);
 
-
-            /**
-             * Start sending a heartbeat to the server. If server don't get heartbeat
-             * it will stop sending data over WebSockets.
-             */
-            window.telldus.telldusDeviceListenHeartbeatInterval = setInterval(function(){
-                $.getJSON('telldus/send-raw-data-over-ws/heartbeat', function(data) {});
-            }, 3000);
-
-
-            /**
-             * When dialog is closed:
-             * - Tell server to stop sending data over WebSockets
-             * - Stop listening top WebSockets
-             * - Stop sending heartbeats to server.
-             */
-            window.telldus.shutdownConnections = function(){
-                $.getJSON('telldus/send-raw-data-over-ws/stop', function(data) {});
-                clearInterval(window.telldus.telldusDeviceListenHeartbeatInterval);
-                RED.comms.unsubscribe("telldus-transmission", window.telldus.incomingData);
-            };
+            // todo change to get status
+//            $.getJSON('telldus/send-raw-data-over-ws/start', function(data) {
+//                if (data.status > 0) {
+//                    RED.notify('<strong>Telldus error</strong>: ' + data.errStr, 'error');
+//                }
+//            });
 
 
         },
         oneditcancel: function() {
-            window.telldus.shutdownConnections();
+            RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
         },
         oneditsave: function() {
-            window.telldus.shutdownConnections();
+            RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
         },
         ondelete: function() { // todo: remove this. ondelete will be deprecated in favor of oneditdelete. https://github.com/node-red/node-red/issues/561#issuecomment-74238250
-            window.telldus.shutdownConnections();
+            RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
         },
         oneditdelete: function() {
-            window.telldus.shutdownConnections();
+            RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
         }
     });
 </script>
