@@ -4,6 +4,41 @@ module.exports = function(RED) {
 
 	var telldus = require('telldus');
 
+	/**
+	 * Get all deviceTypes
+	 */
+	var deviceTypes = require('./resources/deviceTypes.json');
+	deviceTypes = deviceTypes.sort(function (a, b) {
+		if (a.make > b.make) {
+			return 1;
+		} else if (a.make < b.make) {
+			return -1;
+		} else {
+			if (a.name > b.name) {
+				return 1;
+			} else if (a.name< b.name) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	});
+
+	//
+	//"params": "Selflearning" 1
+	//"params": "House:A-P;Unit:1-16" 2
+	//"params": "House:A-P" 3
+	//"params": "I-IV;1-4" 4
+	//"params": "12345ABCDE" 5
+	//"params": "A1-D3" 6
+	//"params": "1-4" 7
+	//"params": "IKEA"
+
+	/**
+	 * Create Node
+	 * @param n
+	 * @constructor
+	 */
 	function TelldusOutNode(n) {
 		RED.nodes.createNode(this, n);
 		this.name = n.name;
@@ -172,8 +207,35 @@ module.exports = function(RED) {
 				res.end();
 			}
 		});
+	});
 
 
+	/**
+	 * Give the client a list of all device types when asked for
+	 */
+	RED.httpAdmin.get('/telldus/device-types', function(req, res) {
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify(deviceTypes));
+		res.end();
+	});
+
+
+	RED.httpAdmin.post('/telldus/devices', function(req, res) {
+		console.dir('Adding device');
+		console.dir(req.body);
+		console.dir(req.body.apa);
+
+		res.writeHead(200, {'Content-Type': 'application/json'});
+//		res.write(JSON.stringify(data));
+		res.end();
+
+
+
+		//var newDeviceId = telldus.addDeviceSync();
+		//var setResult = telldus.setNameSync(newDeviceId, 'Newly created');
+		//
+		//console.log('newDeviceId', newDeviceId );
+		//console.log('setResult', setResult );
 
 	});
 

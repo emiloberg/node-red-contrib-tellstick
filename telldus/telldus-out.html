@@ -1,5 +1,101 @@
 
 <script type="text/x-red" data-template-name="telldus-out">
+    <style>
+
+        #telldus-output-config-devices {
+            width: 100%;
+        }
+
+        .telldus-button {
+            padding: 3px 5px;
+            line-height: 20px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.3);
+        }
+
+        .telldus-status-icon-button:hover,
+        .telldus-button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        a.telldus-button:hover {
+            text-decoration: none;
+        }
+
+        .telldus-status-icon {
+            padding: 3px;
+            font-size: 20px;
+            line-height: 20px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .telldus-status-icon-bell {
+            font-size: 15px;
+        }
+
+        .telldus-status-icon-on {
+            background-color: rgba(255, 255, 0, 0.5);
+        }
+
+        .telldus-status-icon-off {
+            color: rgba(0, 0, 0, 0.3);
+        }
+
+        .telldus-status-icon-25 {
+            background-color: rgba(255, 255, 0, 0.125);
+        }
+
+        .telldus-status-icon-50 {
+            background-color: rgba(255, 255, 0, 0.25);
+        }
+
+        .telldus-status-icon-75 {
+            background-color: rgba(255, 255, 0, 0.375);
+        }
+
+        .telldus-learn-row {
+            text-align: right;
+        }
+
+        .telldus-status-icon-button {
+            border: 1px solid rgba(0, 0, 0, 0.3);
+            margin-right: 3px;
+        }
+
+
+        .telldus-configure-device-dialog .ui-dialog-buttonpane {
+            padding-left: 1em;
+        }
+
+        .telldus-configure-device-dialog .ui-dialog-buttonset {
+            width: 100%;
+        }
+
+        .telldus-configure-device-dialog .ui-dialog-buttonset button {
+            float: right;
+        }
+
+        #telldus-open-output-config {
+            margin: 0 0 10px 106px;
+        }
+
+        #telldus-open-output-config,
+        .telldus-configure-device-dialog .ui-dialog-buttonset button.telldus-add-new-device-button {
+            float: left;
+            background-color: #337ab7;
+            border: #2e6da4;
+            color: white;
+            padding: 0.3em 1em;
+        }
+
+    </style>
+
+    <div class="form-row">
+        <button id="telldus-open-output-config">Configure/Add Devices</button>
+    </div>
     <div class="form-row">
         <label for="node-input-device"><i class="fa fa-lightbulb-o"></i> Device</label>
         <select id="node-input-device">
@@ -22,6 +118,22 @@
         <input type="text" id="node-input-name" placeholder="Name">
         <input type="hidden" id="node-input-devicefriendlyname">
     </div>
+
+
+    <div id="dialog-1" title="Dialog Title goes here...">
+        <table id="telldus-output-config-devices">
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Name</th>
+                <th>Perform</th>
+                <th>Learn</th>
+            </tr>
+        </table>
+    </div>
+
+
+
 </script>
 
 <script type="text/x-red" data-help-name="telldus-out">
@@ -44,25 +156,142 @@
         icon: "bridge-dash.png",
         align: "right",
         label: function() {
-            return this.name || this.devicefriendlyname || "telldus out";
+            if (this.name) {
+                return this.name;
+            } else if (this.devicefriendlyname && this.method) {
+                return this.devicefriendlyname + ' [' +  this.method + ']';
+            } else if (this.devicefriendlyname) {
+                return this.devicefriendlyname;
+            } else {
+                return "Telldus out";
+            }
         },
         labelStyle: function() {
             return this.name?"node_label_italic":"";
         },
         oneditprepare: function() {
 
+            // Configure outputs button
+            $( "#telldus-open-output-config" )
+                .button({
+//                    icons: {
+//                        primary: "ui-icon-gear"
+//                    }
+                })
+                .click(function(event){
+                    event.preventDefault();
+                    $( "#dialog-1" ).dialog( "open" );
+                })
+            ;
+
+            // Configure outputs dialog
+            $( "#dialog-1" ).dialog({
+                dialogClass: 'telldus-configure-device-dialog',
+                autoOpen: false,
+                modal: true,
+                width: 900,
+                maxHeight: ($(window).height() - ($(window).height()/10)),
+                buttons: [
+                    {
+                        text: "Add New Device",
+                        class: "telldus-add-new-device-button",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    {
+                        text: "Done",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ],
+                close: function( event, ui ) {
+                    console.log('Dialog was closed');
+                }
+            });
+
+
+
+
+
             var node = this;
 
+
+
+            function statusObjToStr(statusObj) {
+                if (statusObj.name === 'OFF') {
+                    return '<i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon"></i> Off'
+                } else if (statusObj.name === 'ON') {
+                    return '<i class="fa fa-lightbulb-o telldus-status-icon-on telldus-status-icon"></i> On'
+                } else if (statusObj.name === 'DIM') {
+                    return '<i class="fa fa-lightbulb-o telldus-status-icon-on telldus-status-icon"></i> ' + Math.round((statusObj.level / 255) * 100) + '%';
+                } else {
+                    return 'Unknown'
+                }
+            }
+
+            function methodObjToButtons(methodObj) {
+                var strOut = '';
+                if (methodObj.dim && methodObj.turnon && methodObj.turnoff) {
+                    strOut += '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-25 telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-50 telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-75 telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-on telldus-status-icon telldus-status-icon-button"></i></a>';
+                } else {
+                    if (methodObj.turnoff === true) {
+                        strOut += '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon telldus-status-icon-button"></i></a>';
+                    }
+                    if (methodObj.turnon === true) {
+                        strOut += '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-on telldus-status-icon telldus-status-icon-button"></i></a>';
+                    }
+                }
+
+                if (methodObj.bell === true) {
+                    strOut += '<a href="#"><i class="fa fa-bell-o telldus-status-icon-bell telldus-status-icon telldus-status-icon-button"></i></a>';
+                }
+
+                return strOut;
+            }
+
+            function methodObjToLearnButton(methodObj) {
+                if (methodObj.learn) {
+                    return '<a href="#" class="telldus-button">Learn</a>';
+                } else {
+                    return '';
+                }
+            }
+
+
             /**
-             * Get all devices from backend, and populate device list.
+             * Get all devices from backend, and populate device lists
              */
             var devices = [];
             $.getJSON('telldus/devices',function(data) {
                 devices = data;
+                jqOutputConfigDevices = $('#telldus-output-config-devices');
+                jqNodeInputDevice = $('#node-input-device');
                 data.forEach(function (device) {
-                    $('#node-input-device')
-                            .append($('<option>', { value : device.id })
-                                    .text(device.name));
+                    jqNodeInputDevice
+                        .append($('<option>', { value : device.id })
+                        .text(device.name));
+                    jqOutputConfigDevices
+                        .append(
+                            '<tr>' +
+                                '<td>' + device.id + '</td>' +
+                                '<td>' + statusObjToStr(device.status) + '</td>' +
+                                '<td>' + device.name + '</td>' +
+                                '<td>' + methodObjToButtons(device.methods) + '</td>' +
+                                '<td class="telldus-learn-row">' +
+                                    methodObjToLearnButton(device.methods) +
+                                    '<a href="#" class="telldus-button"><i class="fa fa-cog"></i> Configure</a>' +
+                                '</td>' +
+
+                            '<tr>'
+                        );
+                    
+                    console.dir(device);
                 });
                 $('#node-input-device option[value="' + node.device + '"]').prop('selected', true);
                 showHideMethods(node.device, node.method);
