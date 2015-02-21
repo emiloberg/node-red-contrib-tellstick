@@ -9,7 +9,6 @@
   {
     "model": "codeswitch:elro-ab600",
     "make": "Elro",
-    "make": "Code Switch",
     "name": "System AB600",
     "protocol": "arctech",
     "paramsType": 2

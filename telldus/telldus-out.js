@@ -220,23 +220,25 @@ module.exports = function(RED) {
 	});
 
 
-	RED.httpAdmin.post('/telldus/devices', function(req, res) {
-		console.dir('Adding device');
-		console.dir(req.body);
-		console.dir(req.body.apa);
+//	RED.httpAdmin.post('/telldus/devices', function(req, res) {
+//		console.dir('Adding device');
+//		console.dir(req.body);
+//		console.dir(req.body.apa);
+//
+//		res.writeHead(200, {'Content-Type': 'application/json'});
+////		res.write(JSON.stringify(data));
+//		res.end();
+//
+//
+//
+//		//var newDeviceId = telldus.addDeviceSync();
+//		//var setResult = telldus.setNameSync(newDeviceId, 'Newly created');
+//		//
+//		//console.log('newDeviceId', newDeviceId );
+//		//console.log('setResult', setResult );
+//
+//	});
 
-		res.writeHead(200, {'Content-Type': 'application/json'});
-//		res.write(JSON.stringify(data));
-		res.end();
 
-
-
-		//var newDeviceId = telldus.addDeviceSync();
-		//var setResult = telldus.setNameSync(newDeviceId, 'Newly created');
-		//
-		//console.log('newDeviceId', newDeviceId );
-		//console.log('setResult', setResult );
-
-	});
 
 };

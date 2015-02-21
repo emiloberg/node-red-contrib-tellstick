@@ -2,14 +2,26 @@
 <script type="text/x-red" data-template-name="telldus-out">
     <style>
 
+        .no-close .ui-dialog-titlebar-close {
+          display: none;
+        }
+
         #telldus-output-config-devices {
             width: 100%;
         }
 
+        #telldus-output-config-devices th {
+            text-align: left;
+        }
+
+        #telldus-output-config-devices th.telldus-learn-column {
+            text-align: right;
+        }
+
         .telldus-button {
+            display: inline-block;
             padding: 3px 5px;
             line-height: 20px;
-            width: 20px;
             height: 20px;
             text-align: center;
             border: 1px solid rgba(0, 0, 0, 0.3);
@@ -56,7 +68,7 @@
             background-color: rgba(255, 255, 0, 0.375);
         }
 
-        .telldus-learn-row {
+        .telldus-learn-column {
             text-align: right;
         }
 
@@ -66,24 +78,24 @@
         }
 
 
-        .telldus-configure-device-dialog .ui-dialog-buttonpane {
+        .telldus-list-configured-device-dialog .ui-dialog-buttonpane {
             padding-left: 1em;
         }
 
-        .telldus-configure-device-dialog .ui-dialog-buttonset {
+        .telldus-list-configured-device-dialog .ui-dialog-buttonset {
             width: 100%;
         }
 
-        .telldus-configure-device-dialog .ui-dialog-buttonset button {
+        .telldus-list-configured-device-dialog .ui-dialog-buttonset button {
             float: right;
         }
 
-        #telldus-open-output-config {
+        #telldus-btn-open-device-list{
             margin: 0 0 10px 106px;
         }
 
-        #telldus-open-output-config,
-        .telldus-configure-device-dialog .ui-dialog-buttonset button.telldus-add-new-device-button {
+        #telldus-btn-open-device-list,
+        .telldus-list-configured-device-dialog .ui-dialog-buttonset button.telldus-btn-add-new-device {
             float: left;
             background-color: #337ab7;
             border: #2e6da4;
@@ -91,10 +103,14 @@
             padding: 0.3em 1em;
         }
 
+        #telldus-data-holder-select-device-types {
+            display: none;
+        }
+
     </style>
 
     <div class="form-row">
-        <button id="telldus-open-output-config">Configure/Add Devices</button>
+        <button id="telldus-btn-open-device-list">Configure/Add Devices</button>
     </div>
     <div class="form-row">
         <label for="node-input-device"><i class="fa fa-lightbulb-o"></i> Device</label>
@@ -120,16 +136,38 @@
     </div>
 
 
-    <div id="dialog-1" title="Dialog Title goes here...">
+    <div id="telldus-dialog-list-configured-devices" title="Configured Devices">
         <table id="telldus-output-config-devices">
             <tr>
-                <th>ID</th>
                 <th>Status</th>
                 <th>Name</th>
                 <th>Perform</th>
-                <th>Learn</th>
+                <th class="telldus-learn-column">Learn</th>
             </tr>
         </table>
+    </div>
+
+    <div id="telldus-dialog-add-edit-device" title="Add/Edit Device">
+
+        <div class="form-row">
+            <label for="telldus-select-device-makes">Brand</label>
+            <select id="telldus-select-device-makes">
+                <option value=""></option>
+            </select>
+        </div>
+        <div class="form-row">
+            <label for="telldus-select-device-types">Model</label>
+            <select id="telldus-select-device-types">
+                <option value=""></option>
+            </select>
+        </div>
+
+        <p>lorem</p>
+
+
+        <select id="telldus-data-holder-select-device-types">
+            <option value=""></option>
+        </select>
     </div>
 
 
@@ -171,22 +209,22 @@
         },
         oneditprepare: function() {
 
-            // Configure outputs button
-            $( "#telldus-open-output-config" )
-                .button({
-//                    icons: {
-//                        primary: "ui-icon-gear"
-//                    }
-                })
-                .click(function(event){
-                    event.preventDefault();
-                    $( "#dialog-1" ).dialog( "open" );
-                })
-            ;
+            // Button Listeners
+            $("#telldus-btn-open-device-list" ).click(function(event){
+                event.preventDefault();
+                $( "#telldus-dialog-list-configured-devices" ).dialog( "open" );
+            });
 
-            // Configure outputs dialog
-            $( "#dialog-1" ).dialog({
-                dialogClass: 'telldus-configure-device-dialog',
+//            $(".telldus-btn-add-new-device" ).click(function(event){
+//                event.preventDefault();
+//                $("#telldus-dialog-add-edit-device").dialog( "open" );
+//                console.log('opening add new device');
+//            });
+            
+
+            // Configure list configured devices dialog
+            $("#telldus-dialog-list-configured-devices").dialog({
+                dialogClass: 'telldus-list-configured-device-dialog no-close',
                 autoOpen: false,
                 modal: true,
                 width: 900,
@@ -194,9 +232,9 @@
                 buttons: [
                     {
                         text: "Add New Device",
-                        class: "telldus-add-new-device-button",
+                        class: "telldus-btn-add-new-device",
                         click: function() {
-                            $( this ).dialog( "close" );
+                            $("#telldus-dialog-add-edit-device").dialog("open");
                         }
                     },
                     {
@@ -211,12 +249,94 @@
                 }
             });
 
+            // Configure add/edit device dialog
+            $("#telldus-dialog-add-edit-device").dialog({
+                dialogClass: 'telldus-add-edit-device-dialog no-close form-horizontal',
+                autoOpen: false,
+                modal: true,
+                width: 860,
+                maxHeight: ($(window).height() - ($(window).height()/10)),
+                buttons: [
+                    {
+                        text: "Save Device",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        click: function() {
+                            $( this ).dialog( "close" );
+                        }
+                    }
+                ],
+                close: function( event, ui ) {
+                    console.log('Dialog was closed');
+                },
+                open: function( event, ui ) {
+                    console.log('IZ OPENED');
+                }
+            });
 
+
+
+            // Change event handler for device
+            $('#telldus-select-device-types').change(function () {
+                var jqSelectedDevice = $(this).find(":selected");
+                console.log(jqSelectedDevice.data('make'));
+                console.log(jqSelectedDevice.data('model'));
+                console.log(jqSelectedDevice.data('protocol'));
+                console.log('-----');
+            });
+
+            /**
+             * When a user changes make, then move data from the placeholder
+             * <select> to the real <select>. Reason we do it like this is because
+             * some browsers does not support hiding <option> items
+             */
+            $('#telldus-select-device-makes').change(function () {
+                var jqSelectDevices = $('#telldus-select-device-types');
+                jqSelectDevices.empty();
+                var jqSelectedMakeVal = $(this).find(":selected").val();
+                var curSelectedDevices = $('#telldus-data-holder-select-device-types option[data-make="' + jqSelectedMakeVal + '"]').clone();
+                jqSelectDevices.append(curSelectedDevices);
+            });
 
 
 
             var node = this;
 
+
+            var deviceTypesData = [];
+
+            (function populateListOfSupportedDevices() {
+                $.getJSON('telldus/device-types',function(data) {
+                    // todo add error handling
+
+                    
+
+                    var deviceTypesMakes = {};
+                    data.forEach(function(device) {
+                       deviceTypesMakes[device.make] = true;
+
+                        // Populate list of all devices
+                        $('#telldus-data-holder-select-device-types').append(
+                            '<option data-make="' + device.make +
+                                    '" data-model="' + device.model +
+                                    '" data-protocol="' + device.protocol +
+                            '">' + device.name + '</option>'
+                        );
+                    });
+
+                    Object.keys(deviceTypesMakes).forEach(function (make) {
+                        $('#telldus-select-device-makes').append(
+                            '<option value="' + make + '">' + make + '</option>'
+                        );
+                    });
+                    
+                    console.dir(deviceTypesMakes);
+                });
+            })();
 
 
             function statusObjToStr(statusObj) {
@@ -268,34 +388,33 @@
              * Get all devices from backend, and populate device lists
              */
             var devices = [];
-            $.getJSON('telldus/devices',function(data) {
-                devices = data;
-                jqOutputConfigDevices = $('#telldus-output-config-devices');
-                jqNodeInputDevice = $('#node-input-device');
-                data.forEach(function (device) {
-                    jqNodeInputDevice
-                        .append($('<option>', { value : device.id })
-                        .text(device.name));
-                    jqOutputConfigDevices
-                        .append(
-                            '<tr>' +
-                                '<td>' + device.id + '</td>' +
+            (function getAllDevices() {
+                $.getJSON('telldus/devices',function(data) {
+                    devices = data;
+                    jqOutputConfigDevices = $('#telldus-output-config-devices');
+                    jqNodeInputDevice = $('#node-input-device');
+                    data.forEach(function (device) {
+                        jqNodeInputDevice
+                                .append($('<option>', { value : device.id })
+                                        .text(device.name));
+                        jqOutputConfigDevices
+                                .append(
+                                '<tr>' +
                                 '<td>' + statusObjToStr(device.status) + '</td>' +
-                                '<td>' + device.name + '</td>' +
+                                '<td><a href="#" class="telldus-link-configure-device" data-tdid="' + device.id +'">' + device.name + '</a></td>' +
                                 '<td>' + methodObjToButtons(device.methods) + '</td>' +
-                                '<td class="telldus-learn-row">' +
-                                    methodObjToLearnButton(device.methods) +
-                                    '<a href="#" class="telldus-button"><i class="fa fa-cog"></i> Configure</a>' +
+                                '<td class="telldus-learn-column">' +
+                                methodObjToLearnButton(device.methods) +
                                 '</td>' +
 
-                            '<tr>'
+                                '<tr>'
                         );
-                    
-                    console.dir(device);
+                    });
+                    $('#node-input-device option[value="' + node.device + '"]').prop('selected', true);
+                    showHideMethods(node.device, node.method);
                 });
-                $('#node-input-device option[value="' + node.device + '"]').prop('selected', true);
-                showHideMethods(node.device, node.method);
-            });
+            })();
+
 
             /**
              * Input change listeners
