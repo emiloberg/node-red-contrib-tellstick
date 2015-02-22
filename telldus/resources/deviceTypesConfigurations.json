@@ -1,0 +1,369 @@
+{
+    "arctech": {
+        "codeswitch": {
+            "devices": [{
+                "model": "codeswitch:intertechno",
+                "brand": "Intertechno",
+                "name": "Code Switch"
+            },{
+                "model": "codeswitch:elro-ab600",
+                "brand": "Elro",
+                "name": "System AB600"
+            },{
+                "model": "codeswitch:kappa",
+                "brand": "Kappa",
+                "name": "Code Switch"
+            },{
+                "model": "codeswitch:homeeasy",
+                "brand": "HomeEasy",
+                "name": "Code Switch"
+            },{
+                "model": "codeswitch:byebyestandby",
+                "brand": "Bye Bye Standby",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:chacon",
+                "brand": "Chacon",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:proove",
+                "brand": "Proove",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:coco",
+                "brand": "CoCo Technologies",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:klikaanklikuit",
+                "brand": "KlikAanKlikUit",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:nexa",
+                "brand": "Nexa",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "house": "A-P",
+                "unit": "1-16"
+            }
+        },
+        "bell": {
+            "devices": [{
+                "model": "bell:nexa",
+                "brand": "Nexa",
+                "name": "Bell"
+            }, {
+                "model": "bell:chacon",
+                "brand": "Chacon",
+                "name": "Bell"
+            }, {
+                "model": "bell:kappa",
+                "brand": "Kappa",
+                "name": "Bell"
+            }, {
+                "model": "bell:proove",
+                "brand": "Proove",
+                "name": "Bell"
+            }, {
+                "model": "bell:klikaanklikuit",
+                "brand": "KlikAanKlikUit",
+                "name": "Bell"
+            }, {
+                "model": "bell:intertechno",
+                "brand": "Intertechno",
+                "name": "Bell"
+            }, {
+                "model": "bell:coco",
+                "brand": "CoCo Technologies",
+                "name": "Bell"
+            }],
+            "data": {
+                "house": "A-P"
+            }
+        },
+        "selflearning-switch": {
+            "devices": [{
+                "model": "selflearning-switch:klikaanklikuit",
+                "brand": "KlikAanKlikUit",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:nexa",
+                "brand": "Nexa",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:intertechno",
+                "brand": "Intertechno",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:chacon",
+                "brand": "Chacon",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:homeeasy",
+                "brand": "HomeEasy",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:kappa",
+                "brand": "Kappa",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:proove",
+                "brand": "Proove",
+                "name": "Self Learning on/off"
+            }, {
+                "model": "selflearning-switch:coco",
+                "brand": "CoCo Technologies",
+                "name": "Self Learning on/off"
+            }],
+            "data":{
+                "house": "1-67108863",
+                "unit": "1-16"
+            }},
+        "selflearning-dimmer": {
+            "devices": [
+                {
+                    "model": "selflearning-dimmer:kappa",
+                    "brand": "Kappa",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:proove",
+                    "brand": "Proove",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:klikaanklikuit",
+                    "brand": "KlikAanKlikUit",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:intertechno",
+                    "brand": "Intertechno",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:coco",
+                    "brand": "CoCo Technologies",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:nexa",
+                    "brand": "Nexa",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:chacon",
+                    "brand": "Chacon",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:rusta",
+                    "brand": "Rusta",
+                    "name": "Self Learning dimmer"
+                }, {
+                    "model": "selflearning-dimmer:homeeasy",
+                    "brand": "HomeEasy",
+                    "name": "Self Learning dimmer"
+                }
+            ],
+            "data": {
+                "house": "1-67108863",
+                "unit": "1-16"
+            }
+        }
+    },
+    "everflourish": {
+        "selflearning-switch": {
+            "devices": [{
+                "model": "selflearning-switch:gao",
+                "brand": "GAO",
+                "name": "Self Learning on/off"
+            }],
+            "data": {
+                "house": "0-16383",
+                "unit": "1-4"
+            }
+        }
+    },
+    "fuhaote": {
+        "codeswitch": {
+            "devices": [{
+                "model": "codeswitch:fuhaote",
+                "brand": "HQ",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "code": "{onoff}12345ABCDE"
+            }
+        }
+    },
+    "ikea": {
+        "selflearning": {
+            "devices": [{
+                "model": "selflearning:ikea",
+                "brand": "IKEA",
+                "name": "Koppla dimmer"
+            }],
+            "data": {
+                "system": "1-16",
+                "units": {
+                    "values": "1-10",
+                    "type": "onoff"
+                },
+                "fade": {
+                    "values": [
+                        {
+                            "name": "direct",
+                            "value": "false"
+                        },
+                        {
+                            "name": "fase",
+                            "value": "true"
+                        }
+                    ]
+                }
+            }
+        },
+        "selflearning-switch": {
+            "devices": [{
+                "model": "selflearning-switch:ikea",
+                "brand": "IKEA",
+                "name": "Koppla on/off"
+            }],
+            "data": {
+                "system": "1-16",
+                "units": {
+                    "values": "1-10",
+                    "type": "onoff"
+                },
+                "fade": {
+                    "values": [
+                        {
+                            "name": "direct",
+                            "value": "false"
+                        },
+                        {
+                            "name": "fase",
+                            "value": "true"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "risingsun": {
+        "codeswitch": {
+            "devices": [{
+                "model": "codeswitch:gao",
+                "brand": "GAO",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:kjelloco",
+                "brand": "Kjell o Company",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "house": "1-4",
+                "unit": "1-4"
+            }
+        },
+        "selflearning": {
+            "devices": [{
+                "model": "selflearning:conrad",
+                "brand": "Conrad",
+                "name": "Self Learning"
+            }, {
+                "model": "selflearning:otio",
+                "brand": "Otio",
+                "name": "Self Learning"
+            }],
+            "data": {
+                "house": "1-33554432",
+                "unit": "1-16"
+            }
+        }
+    },
+    "sartano": {
+        "codeswitch": {
+            "devices": [{
+                "model": "codeswitch:sartano",
+                "brand": "Sartano",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:rusta",
+                "brand": "Rusta",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:elro",
+                "brand": "Elro",
+                "name": "Code Switch"
+            }, {
+                "model": "codeswitch:brennenstuhl",
+                "brand": "Brennenstuhl",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "code": "{onoff}12345ABCDE"
+            }
+        }
+    },
+    "silvanchip": {
+        "ecosavers":  {
+            "devices": [{
+                "model": "ecosavers:ecosavers",
+                "brand": "Ecosavers",
+                "name": "Self Learning"
+            }],
+            "data": {
+                "house": "1-1048575",
+                "unit": "1-4"
+            }
+        }
+    },
+    "upm": {
+        "selflearning": {
+            "devices": [
+                {
+                    "model": "selflearning:upm",
+                    "brand": "UPM",
+                    "name": "Self Learning"
+                }
+            ],
+            "data": {
+                "house": "0-4095",
+                "unit": "1-4"
+            }
+        }
+    },
+    "waveman": {
+        "codeswitch": {
+            "devices": [{
+                "model": "codeswitch:waveman",
+                "brand": "Waveman",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "house": "A-P",
+                "unit": "1-16"
+            }
+        }
+    },
+    "x10": {
+        "codeswitch": {
+            "devices": [{
+                "model": "codeswitch:x10",
+                "brand": "X10",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "house": "A-P",
+                "unit": "1-16"
+            }
+        }
+    },
+    "yidong": {
+        "goobay": {
+            "devices": [{
+                "model": "goobay:goobay",
+                "brand": "Goobay (experimental)",
+                "name": "Code Switch"
+            }],
+            "data": {
+                "unit": "1-4"
+            }
+        }
+    }
+}

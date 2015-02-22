@@ -3,26 +3,14 @@ module.exports = function(RED) {
 	'use strict';
 
 	var telldus = require('telldus');
+	var telldusDeviceTypes = require('./lib/telldusDeviceTypes.js');
 
-	/**
-	 * Get all deviceTypes
-	 */
-	var deviceTypes = require('./resources/deviceTypes.json');
-	deviceTypes = deviceTypes.sort(function (a, b) {
-		if (a.make > b.make) {
-			return 1;
-		} else if (a.make < b.make) {
-			return -1;
-		} else {
-			if (a.name > b.name) {
-				return 1;
-			} else if (a.name< b.name) {
-				return -1;
-			} else {
-				return 0;
-			}
-		}
-	});
+
+//	telldusDeviceTypes.getEditHTML('arctech', 'selflearning-dimmer:rusta');
+
+
+//	console.log(require('util').inspect(telldusDeviceTypes.init, { showHidden: true, depth: null, colors: true }));
+
 
 	//
 	//"params": "Selflearning" 1
@@ -176,7 +164,7 @@ module.exports = function(RED) {
 	/**
 	 * Give the client a list of all configured devices when asked for.
 	 */
-	RED.httpAdmin.get('/telldus/devices', function(req, res) {
+	RED.httpAdmin.get('/telldus/configured-devices', function(req, res) {
 		telldus.getDevices(function(err, data) {
 			if (err) {
 				res.writeHead(500, {'Content-Type': 'application/json'});
@@ -213,11 +201,21 @@ module.exports = function(RED) {
 	/**
 	 * Give the client a list of all device types when asked for
 	 */
-	RED.httpAdmin.get('/telldus/device-types', function(req, res) {
+	RED.httpAdmin.get('/telldus/supported-brands', function(req, res) {
 		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.write(JSON.stringify(deviceTypes));
+		res.write(JSON.stringify(telldusDeviceTypes.getBrands()));
 		res.end();
 	});
+
+	/**
+	* Give the client a list of all device types when asked for
+	*/
+	RED.httpAdmin.get('/telldus/supported-devices/:id', function(req, res) {
+		res.writeHead(200, {'Content-Type': 'application/json'});
+		res.write(JSON.stringify(telldusDeviceTypes.getModels(req.params.id)));
+		res.end();
+	});
+
 
 
 //	RED.httpAdmin.post('/telldus/devices', function(req, res) {
