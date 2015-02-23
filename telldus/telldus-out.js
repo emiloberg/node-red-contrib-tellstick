@@ -207,8 +207,9 @@ module.exports = function(RED) {
 		res.end();
 	});
 
+
 	/**
-	* Give the client a list of all device types when asked for
+	* Give the client a list of all device types for a given brand when asked for
 	*/
 	RED.httpAdmin.get('/telldus/supported-devices/:id', function(req, res) {
 		res.writeHead(200, {'Content-Type': 'application/json'});
@@ -216,6 +217,15 @@ module.exports = function(RED) {
 		res.end();
 	});
 
+
+	/**
+	 * Give the client the parameters for a given model when asked for
+	 */
+	//RED.httpAdmin.get('/telldus/supported-parameters/:id', function(req, res) {
+	//	res.writeHead(200, {'Content-Type': 'application/json'});
+	//	res.write(JSON.stringify(telldusDeviceTypes.getParameters(req.params.id)));
+	//	res.end();
+	//});
 
 
 //	RED.httpAdmin.post('/telldus/devices', function(req, res) {

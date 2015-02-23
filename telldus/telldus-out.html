@@ -103,6 +103,40 @@
             padding: 0.3em 1em;
         }
 
+        #telldus-row-addedit-devices,
+        .telldus-addedit-parameter-row {
+            display: none;
+        }
+
+        .telldus-addedit-parameter-row input[type="text"] {
+            width: 206px;
+        }
+
+        .telldus-parameter-help-text {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .telldus-code-block {
+            display: block;
+            width: 30px;
+            float: left;
+        }
+
+        .telldus-code-block-wrapper {
+            display: inline-block;
+            width: 400px;
+        }
+
+        .form-row .telldus-code-block label {
+            width: 17px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .telldus-code-label {
+            vertical-align: top;
+        }
+
     </style>
 
     <div class="form-row">
@@ -151,11 +185,90 @@
                 <option value=""></option>
             </select>
         </div>
-        <div class="form-row">
+        <div id="telldus-row-addedit-devices" class="form-row">
             <label for="telldus-select-supported-devices">Model</label>
             <select id="telldus-select-supported-devices">
                 <option value=""></option>
             </select>
+        </div>
+
+        <div id="telldus-row-addedit-parameter-house-number" class="form-row telldus-addedit-parameter-row">
+            <label for="telldus-addedit-parameter-house-number">House</label>
+            <input type="text" id="telldus-addedit-parameter-house-number">
+            <button class="telldus-random-button" data-randomfor="telldus-addedit-parameter-house-number">Randomize</button>
+            <span class="telldus-parameter-help-text">Help Text</span>
+        </div>
+
+        <div id="telldus-row-addedit-parameter-house-letter" class="form-row telldus-addedit-parameter-row">
+            <label for="telldus-addedit-parameter-house-letter">House</label>
+            <input type="text" id="telldus-addedit-parameter-house-letter">
+            <span class="telldus-parameter-help-text">Help Text</span>
+        </div>
+
+        <div id="telldus-row-addedit-parameter-unit" class="form-row telldus-addedit-parameter-row">
+            <label for="telldus-addedit-parameter-unit">Unit</label>
+            <input type="text" id="telldus-addedit-parameter-unit">
+            <span class="telldus-parameter-help-text">Help Text</span>
+        </div>
+
+        <div id="telldus-row-addedit-parameter-code" class="form-row telldus-addedit-parameter-row">
+            <label for="" class="telldus-code-label">Code</label>
+
+            <div class="telldus-code-block-wrapper">
+
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-1" value="true">
+                    <input type="radio" name="telldus-code-1" value="false" checked="checked">
+                    <label for="telldus-code-1">1</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-2" value="true">
+                    <input type="radio" name="telldus-code-2" value="false" checked="checked">
+                    <label for="telldus-code-2">2</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-3" value="true">
+                    <input type="radio" name="telldus-code-3" value="false" checked="checked">
+                    <label for="telldus-code-3">3</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-4" value="true">
+                    <input type="radio" name="telldus-code-4" value="false" checked="checked">
+                    <label for="telldus-code-4">4</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-5" value="true">
+                    <input type="radio" name="telldus-code-5" value="false" checked="checked">
+                    <label for="telldus-code-5">5</label>
+                </div>
+               <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-6" value="true">
+                    <input type="radio" name="telldus-code-6" value="false" checked="checked">
+                    <label for="telldus-code-6">A</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-7" value="true">
+                    <input type="radio" name="telldus-code-7" value="false" checked="checked">
+                    <label for="telldus-code-7">B</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-8" value="true">
+                    <input type="radio" name="telldus-code-8" value="false" checked="checked">
+                    <label for="telldus-code-8">C</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-9" value="true">
+                    <input type="radio" name="telldus-code-9" value="false" checked="checked">
+                    <label for="telldus-code-9">D</label>
+                </div>
+                <div class="telldus-code-block">
+                    <input type="radio" name="telldus-code-10" value="true">
+                    <input type="radio" name="telldus-code-10" value="false" checked="checked">
+                    <label for="telldus-code-10">E</label>
+                </div>
+
+            </div>
+
         </div>
 
         <p>lorem</p>
@@ -428,7 +541,7 @@
                 dialogClass: 'telldus-add-edit-device-dialog no-close form-horizontal',
                 autoOpen: false,
                 modal: true,
-                width: 860,
+                width: 700,
                 maxHeight: ($(window).height() - ($(window).height()/10)),
                 buttons: [
                     {
@@ -449,6 +562,17 @@
                 },
                 open: function( event, ui ) {
                     /**
+                     * Reset all input fields (if dialog has been opened before)
+                     */
+                    $('.telldus-addedit-parameter-row').hide();
+                    $('#telldus-row-addedit-devices').hide();
+                    $('#telldus-addedit-parameter-house-number').val('');
+                    $('#telldus-addedit-parameter-house-letter').val('');
+                    $('#telldus-addedit-parameter-unit').val('');
+                    $('.telldus-code-block input[value="false"]').prop('checked', true);
+                    $('.telldus-code-block input[value="true"]').prop('checked', false);
+
+                    /**
                      * Make request to server for all supported Brands and
                      * populate "Brands" select box.
                      */
@@ -464,16 +588,6 @@
                 }
             });
 
-            /**
-             *  Event Listener - "Devices" Select Box
-             */
-            $('#telldus-select-supported-devices').change(function () {
-                var jqSelectedDevice = $(this).find(":selected");
-                console.log(jqSelectedDevice.data('brand'));
-                console.log(jqSelectedDevice.data('model'));
-                console.log(jqSelectedDevice.data('protocol'));
-                console.log('-----');
-            });
 
             /**
              * Event Listener - "Brands" Select Box
@@ -485,11 +599,135 @@
 
 
             /**
+             *  Event Listener - "Devices" Select Box
+             */
+            $('#telldus-select-supported-devices').change(function () {
+                var jqSelectedDevice = $(this).find(":selected");
+                getAndDisplayModelParameters(
+                        jqSelectedDevice.data('paramhouse'),
+                        jqSelectedDevice.data('paramunit'),
+                        jqSelectedDevice.data('paramcode')
+                );
+            });
+
+            function makeNumberIntoRealNumber(str) {
+                var maybeNumber = parseFloat(str);
+                if (isNaN(maybeNumber)) {
+                    return str;
+                } else {
+                    return maybeNumber;
+                }
+            }
+
+            /**
+             *  Event Listener - Randomize button
+             */
+            $('.telldus-random-button').click(function () {
+                var jqThis = $(this);
+                var min = jqThis.data('min');
+                var max = jqThis.data('max');
+                $('#' + jqThis.data('randomfor')).val(Math.floor(Math.random() * (max - min) + min));
+            });
+
+            function isNumber(str) {
+                return (typeof str === 'number' && (str % 1) === 0);
+            }
+
+            function getAndDisplayModelParameters(house, unit, code) {
+
+                $('.telldus-addedit-parameter-row').hide();
+
+                if (house === undefined && unit === undefined && code === undefined) {
+                    return;
+                }
+
+                var jqCurrentRow;
+
+                /**
+                 * Show "House" input field
+                 */
+                if (house !== 'undefined' && house !== undefined) {
+                    var houseData = house.split('-');
+                    if (houseData.length === 2) {
+                        if (isNumber(makeNumberIntoRealNumber(houseData[0])) && isNumber(makeNumberIntoRealNumber(houseData[1]))) {
+                            /**
+                             * House is a number span
+                             */
+                            jqCurrentRow = $('#telldus-row-addedit-parameter-house-number');
+                            jqCurrentRow.find('.telldus-random-button')
+                                    .data('min', houseData[0])
+                                    .data('max', houseData[1]);
+                            jqCurrentRow.find('.telldus-parameter-help-text').text('Number: ' + house);
+                            jqCurrentRow.show();
+                        } else {
+                            /**
+                             * House is a letter span
+                             */
+                            jqCurrentRow = $('#telldus-row-addedit-parameter-house-letter');
+                            jqCurrentRow.find('.telldus-parameter-help-text').text('Characters: ' + house);
+                            jqCurrentRow.show();
+                        }
+                    } else {
+                        RED.notify('<strong>Telldus error (err: 1)</strong>: "house" could not be understood, Configuration JSON file probably not correct', 'error');
+                    }
+                }
+
+
+                /**
+                 * Show "Unit" input field
+                 */
+                if (unit !== 'undefined' && unit !== undefined) {
+                    var unitData = unit.split('-');
+                    if (unitData.length === 2) {
+                        if (isNumber(makeNumberIntoRealNumber(unitData[0])) && isNumber(makeNumberIntoRealNumber(unitData[1]))) {
+                            jqCurrentRow = $('#telldus-row-addedit-parameter-unit');
+                            jqCurrentRow.find('.telldus-parameter-help-text').text('Number: ' + unit);
+                            jqCurrentRow.show();
+                        } else {
+                            RED.notify('<strong>Telldus error (err: 2)</strong>: "unit" could not be understood, Configuration JSON file probably not correct', 'error');
+                        }
+                    } else {
+                        RED.notify('<strong>Telldus error (err: 3)</strong>: "unit" could not be understood, Configuration JSON file probably not correct', 'error');
+                    }
+                }
+
+
+                /**
+                 * Show "Code" input field
+                 */
+//                if (code !== 'undefined' && code !== undefined)
+//                telldus-row-addedit-parameter-code
+                if (code === true) {
+                    jqCurrentRow = $('#telldus-row-addedit-parameter-code');
+                    jqCurrentRow.show();
+                }
+
+                //(?:0|1){10}
+
+//
+
+//                    $('#telldus-row-addedit-parameter-house-number')
+//                    $('#telldus-row-addedit-parameter-unit')
+
+
+
+//                    // todo add error handling
+//                    var jqSelectBrands = $('#telldus-select-supported-brands');
+//                    jqSelectBrands.empty();
+//                    jqSelectBrands.append('<option value=""></option>');
+//                    data.forEach(function(brand) {
+//                        jqSelectBrands.append('<option value="' + brand + '">' + brand + '</option>');
+//                    });
+
+            }
+
+
+            /**
              * Take brand name, make request to the server for all
              * devices of that brand name and populate the "Brands"
              * Select Box with those devices.
              */
-            function updateDeviceSelect(brandName) {
+            function updateDeviceSelect(brandName, selectedModel) {
                 $.getJSON('telldus/supported-devices/' + brandName, function(data) {
                     var jqSelectDevices = $('#telldus-select-supported-devices');
                     jqSelectDevices.empty();
@@ -499,9 +737,31 @@
                             '" data-model="' + device.model +
                             '" data-protocol="' + device.protocol +
                             '" data-type="' + device.type +
+                            '" data-paramhouse="' + device.parameters.house +
+                            '" data-paramunit="' + device.parameters.unit +
+                            '" data-paramcode="' + device.parameters.code +
                             '">' + device.name + '</option>'
                         );
                     });
+
+                    console.dir('UPDATING DEVICE');
+                    
+                    $('#telldus-row-addedit-devices').show();
+
+
+
+                    /**
+                     * If no selectedModel is sent in, do a request for the parameters
+                     * for the _first_ device in the list. And display the
+                     * parameters.
+                     */
+                    if(!selectedModel) {
+                        getAndDisplayModelParameters(
+                            data[0].parameters.house,
+                            data[0].parameters.unit,
+                            data[0].parameters.code
+                        );
+                    }
                 });
             }
 

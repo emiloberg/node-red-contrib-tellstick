@@ -65,6 +65,7 @@ function getModels(brandName) {
 					var outModel = device;
 					outModel.protocol = protocol;
 					outModel.type = type;
+					outModel.parameters = deviceTypes[protocol][type].parameters;
 					models.push(outModel);
 				}
 			});
@@ -73,6 +74,21 @@ function getModels(brandName) {
 	return models;
 }
 
+//function getParameters(modelName) {
+//	var ret = {};
+//	Object.keys(deviceTypes).forEach(function (protocol) {
+//		Object.keys(deviceTypes[protocol]).forEach(function (type) {
+//			deviceTypes[protocol][type].devices.forEach(function (device) {
+//				if (device.model === modelName) {
+//					ret = deviceTypes[protocol][type].parameters;
+//				}
+//			});
+//		});
+//	});
+//	return ret;
+//}
+
 //module.exports.getProtocols = getProtocols;
 module.exports.getBrands = getBrands;
 module.exports.getModels = getModels;
+//module.exports.getParameters = getParameters;
