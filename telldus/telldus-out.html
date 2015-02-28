@@ -8,13 +8,14 @@
 
         #telldus-output-config-devices {
             width: 100%;
+            border-spacing: 0;
         }
 
         #telldus-output-config-devices th {
             text-align: left;
         }
 
-        #telldus-output-config-devices th.telldus-learn-column {
+        #telldus-output-config-devices th.telldus-config-column {
             text-align: right;
         }
 
@@ -49,11 +50,11 @@
         }
 
         .telldus-status-icon-on {
-            background-color: rgba(255, 255, 0, 0.5);
+            color: rgb(166, 107, 0);
         }
 
         .telldus-status-icon-off {
-            color: rgba(0, 0, 0, 0.3);
+            color: rgba(0, 0, 0, 0.2);
         }
 
         .telldus-status-icon-25 {
@@ -68,7 +69,11 @@
             background-color: rgba(255, 255, 0, 0.375);
         }
 
-        .telldus-learn-column {
+        .telldus-status-icon-100 {
+            background-color: rgba(255, 255, 0, 0.5);
+        }
+
+        .telldus-config-column {
             text-align: right;
         }
 
@@ -108,6 +113,7 @@
             display: none;
         }
 
+        #telldus-addedit-name,
         .telldus-addedit-parameter-row input[type="text"] {
             width: 206px;
         }
@@ -140,7 +146,7 @@
     </style>
 
     <div class="form-row">
-        <button id="telldus-btn-open-device-list">Configure/Add Devices</button>
+        <button id="telldus-btn-open-device-list"><i class="fa fa-cog"></i> Configure/Add Devices</button>
     </div>
     <div class="form-row">
         <label for="node-input-device"><i class="fa fa-lightbulb-o"></i> Device</label>
@@ -168,51 +174,63 @@
 
     <div id="telldus-dialog-list-configured-devices" title="Configured Devices">
         <table id="telldus-output-config-devices">
-            <tr>
-                <th>Status</th>
-                <th>Name</th>
-                <th>Perform</th>
-                <th class="telldus-learn-column">Learn</th>
-            </tr>
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Name</th>
+                    <th>Perform</th>
+                    <th class="telldus-learn-column">Learn</th>
+                    <th class="telldus-config-column">Configure</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
         </table>
     </div>
 
     <div id="telldus-dialog-add-edit-device" title="Add/Edit Device">
 
         <div class="form-row">
-            <label for="telldus-select-supported-brands">Brand</label>
+            <label for="telldus-addedit-name"><i class="fa fa-tag"></i> Name</label>
+            <input type="text" id="telldus-addedit-name" placeholder="Name">
+        </div>
+
+        <div class="form-row">
+            <label for="telldus-select-supported-brands"><i class="fa fa-cubes"></i> Brand</label>
             <select id="telldus-select-supported-brands">
                 <option value=""></option>
             </select>
         </div>
         <div id="telldus-row-addedit-devices" class="form-row">
-            <label for="telldus-select-supported-devices">Model</label>
+            <label for="telldus-select-supported-devices"><i class="fa fa-cube"></i> Model</label>
             <select id="telldus-select-supported-devices">
                 <option value=""></option>
             </select>
         </div>
 
         <div id="telldus-row-addedit-parameter-house-number" class="form-row telldus-addedit-parameter-row">
-            <label for="telldus-addedit-parameter-house-number">House</label>
-            <input type="text" id="telldus-addedit-parameter-house-number">
+            <label for="telldus-addedit-parameter-house-number"><i class="fa fa-dot-circle-o"></i> House</label>
+            <input type="text" id="telldus-addedit-parameter-house-number" class="telldus-addedit-param-input">
             <button class="telldus-random-button" data-randomfor="telldus-addedit-parameter-house-number">Randomize</button>
             <span class="telldus-parameter-help-text">Help Text</span>
         </div>
 
         <div id="telldus-row-addedit-parameter-house-letter" class="form-row telldus-addedit-parameter-row">
-            <label for="telldus-addedit-parameter-house-letter">House</label>
-            <input type="text" id="telldus-addedit-parameter-house-letter">
+            <label for="telldus-addedit-parameter-house-letter"><i class="fa fa-dot-circle-o"></i> House</label>
+            <input type="text" id="telldus-addedit-parameter-house-letter" class="telldus-addedit-param-input">
             <span class="telldus-parameter-help-text">Help Text</span>
         </div>
 
         <div id="telldus-row-addedit-parameter-unit" class="form-row telldus-addedit-parameter-row">
-            <label for="telldus-addedit-parameter-unit">Unit</label>
-            <input type="text" id="telldus-addedit-parameter-unit">
+            <label for="telldus-addedit-parameter-unit"><i class="fa fa-dot-circle-o"></i> Unit</label>
+            <input type="text" id="telldus-addedit-parameter-unit" class="telldus-addedit-param-input">
             <span class="telldus-parameter-help-text">Help Text</span>
         </div>
 
         <div id="telldus-row-addedit-parameter-code" class="form-row telldus-addedit-parameter-row">
-            <label for="" class="telldus-code-label">Code</label>
+            <label for="" class="telldus-code-label"><i class="fa fa-dot-circle-o"></i> Code</label>
+
+            <input type="hidden" id="telldus-addedit-parameter-code" class="telldus-addedit-param-input">
 
             <div class="telldus-code-block-wrapper">
 
@@ -271,8 +289,6 @@
 
         </div>
 
-        <p>lorem</p>
-
     </div>
 
 
@@ -317,10 +333,7 @@
 
             var node = this;
 
-
-
-
-
+            getAllDevicesAndPopulateLists();
 
             /* ************************************************************* *\
              *
@@ -462,25 +475,25 @@
             }
 
 
-            function methodObjToButtons(methodObj) {
+            function deviceObjToButtons(deviceObj) {
                 var strOut = '';
-                if (methodObj.dim && methodObj.turnon && methodObj.turnoff) {
-                    strOut += '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon telldus-status-icon-button"></i></a>' +
-                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-25 telldus-status-icon telldus-status-icon-button"></i></a>' +
-                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-50 telldus-status-icon telldus-status-icon-button"></i></a>' +
-                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-75 telldus-status-icon telldus-status-icon-button"></i></a>' +
-                    '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-on telldus-status-icon telldus-status-icon-button"></i></a>';
+                if (deviceObj.methods.dim && deviceObj.methods.turnon && deviceObj.methods.turnoff) {
+                    strOut += '<a href="#" class="telldus-invoke-method-link" data-method="turnoff" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#" class="telldus-invoke-method-link" data-method="dim" data-methodvalue="64" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-25 telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#" class="telldus-invoke-method-link" data-method="dim" data-methodvalue="128" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-50 telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#" class="telldus-invoke-method-link" data-method="dim" data-methodvalue="192" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-75 telldus-status-icon telldus-status-icon-button"></i></a>' +
+                    '<a href="#" class="telldus-invoke-method-link" data-method="dim" data-methodvalue="255" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-100 telldus-status-icon telldus-status-icon-button"></i></a>';
                 } else {
-                    if (methodObj.turnoff === true) {
-                        strOut += '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon telldus-status-icon-button"></i></a>';
+                    if (deviceObj.methods.turnoff === true) {
+                        strOut += '<a href="#" class="telldus-invoke-method-link" data-method="turnoff" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-off telldus-status-icon telldus-status-icon-button"></i></a>';
                     }
-                    if (methodObj.turnon === true) {
-                        strOut += '<a href="#"><i class="fa fa-lightbulb-o telldus-status-icon-on telldus-status-icon telldus-status-icon-button"></i></a>';
+                    if (deviceObj.methods.turnon === true) {
+                        strOut += '<a href="#" class="telldus-invoke-method-link" data-method="turnon" data-deviceid="' + deviceObj.id + '"><i class="fa fa-lightbulb-o telldus-status-icon-100 telldus-status-icon telldus-status-icon-button"></i></a>';
                     }
                 }
 
-                if (methodObj.bell === true) {
-                    strOut += '<a href="#"><i class="fa fa-bell-o telldus-status-icon-bell telldus-status-icon telldus-status-icon-button"></i></a>';
+                if (deviceObj.methods.bell === true) {
+                    strOut += '<a href="#" class="telldus-invoke-method-link" data-method="bell" data-deviceid="' + deviceObj.id + '"><i class="fa fa-bell-o telldus-status-icon-bell telldus-status-icon telldus-status-icon-button"></i></a>';
                 }
 
                 return strOut;
@@ -500,11 +513,19 @@
              * Get all configured devices from backend, and populate device lists
              */
             var devices = [];
-            (function getAllDevices() {
+            function getAllDevicesAndPopulateLists() {
                 $.getJSON('telldus/configured-devices',function(data) {
                     devices = data;
-                    jqOutputConfigDevices = $('#telldus-output-config-devices');
+                    jqOutputConfigDevices = $('#telldus-output-config-devices tbody');
                     jqNodeInputDevice = $('#node-input-device');
+
+                    // Reset
+                    jqOutputConfigDevices.empty();
+                    jqNodeInputDevice
+                        .empty()
+                        .append('<option value=""></option>');
+
+
                     data.forEach(function (device) {
                         jqNodeInputDevice
                                 .append($('<option>', { value : device.id })
@@ -512,20 +533,26 @@
                         jqOutputConfigDevices
                                 .append(
                                 '<tr>' +
-                                '<td>' + statusObjToStr(device.status) + '</td>' +
-                                '<td><a href="#" class="telldus-link-configure-device" data-tdid="' + device.id +'">' + device.name + '</a></td>' +
-                                '<td>' + methodObjToButtons(device.methods) + '</td>' +
-                                '<td class="telldus-learn-column">' +
-                                methodObjToLearnButton(device.methods) +
-                                '</td>' +
-
+                                    '<td>' + statusObjToStr(device.status) + '</td>' +
+                                    '<td>' + device.name + '</td>' +
+                                    '<td>' + deviceObjToButtons(device) + '</td>' +
+                                    '<td>' + methodObjToLearnButton(device.methods) + '</td>' +
+                                    '<td class="telldus-config-column">' +
+                                        '<a href="#" class="telldus-button">Configure</a>' +
+                                    '</td>' +
                                 '<tr>'
                         );
+                        //device.id
                     });
                     $('#node-input-device option[value="' + node.device + '"]').prop('selected', true);
                     showHideMethods(node.device, node.method);
                 });
-            })();
+            }
+
+            $('.telldus-invoke-method-link').click(function(event){
+                event.preventDefault();
+                $( "#telldus-dialog-list-configured-devices" ).dialog( "open" );
+            });            
 
 
             /* ************************************************************* *\
@@ -547,13 +574,16 @@
                     {
                         text: "Save Device",
                         click: function() {
-                            $( this ).dialog( "close" );
+                            var success = saveAddEdit();
+                            if (success) {
+                                $(this).dialog('close');
+                            }
                         }
                     },
                     {
                         text: "Cancel",
                         click: function() {
-                            $( this ).dialog( "close" );
+                            $( this ).dialog('close');
                         }
                     }
                 ],
@@ -561,16 +591,7 @@
                     console.log('Dialog was closed');
                 },
                 open: function( event, ui ) {
-                    /**
-                     * Reset all input fields (if dialog has been opened before)
-                     */
-                    $('.telldus-addedit-parameter-row').hide();
-                    $('#telldus-row-addedit-devices').hide();
-                    $('#telldus-addedit-parameter-house-number').val('');
-                    $('#telldus-addedit-parameter-house-letter').val('');
-                    $('#telldus-addedit-parameter-unit').val('');
-                    $('.telldus-code-block input[value="false"]').prop('checked', true);
-                    $('.telldus-code-block input[value="true"]').prop('checked', false);
+                    resetAllParametersFields();
 
                     /**
                      * Make request to server for all supported Brands and
@@ -589,12 +610,133 @@
             });
 
 
+            function saveAddEdit() {
+                
+                /**
+                 * Validate every input and build payload object 
+                 */
+                var errStr = [];
+                var jqSelectedBrands = $('#telldus-select-supported-brands :selected');
+                var jqSelectedDevice = $('#telldus-select-supported-devices :selected');
+
+                $('#telldus-dialog-add-edit-device .input-error').removeClass('input-error');
+
+                var payload = {
+                    model: jqSelectedDevice.data('model'),
+                    protocol: jqSelectedDevice.data('protocol'),
+                    type: jqSelectedDevice.data('type'),
+                    parameters: {}
+                };
+
+                if (jqSelectedDevice.val().length > 0 && jqSelectedBrands.val().length > 0) {
+                    var jqInputHouseNumber = $('#telldus-addedit-parameter-house-number');
+                    var jqInputHouseLetter = $('#telldus-addedit-parameter-house-letter');
+                    var jqInputUnit = $('#telldus-addedit-parameter-unit');
+                    var jqInputCode = $('#telldus-addedit-parameter-code');
+                    var jqInputName = $('#telldus-addedit-name');
+
+                    if (jqInputHouseNumber.data('use') === 'true') {
+                        if(validateParamInput(jqInputHouseNumber)) {
+                            payload.parameters.house = jqInputHouseNumber.val();
+                        } else {
+                            jqInputHouseNumber.addClass('input-error');
+                            errStr.push('non-valid house number');
+                        }
+                    }
+
+                    if (jqInputHouseLetter.data('use') === 'true') {
+                        if(validateParamInput(jqInputHouseLetter)) {
+                            payload.parameters.house = jqInputHouseLetter.val();
+                        }  else {
+                            jqInputHouseLetter.addClass('input-error');
+                            errStr.push('non-valid house letter');
+                        }
+                    }
+
+                    if (jqInputUnit.data('use') === 'true') {
+                        if(validateParamInput(jqInputUnit)) {
+                            payload.parameters.unit = jqInputUnit.val();
+                        }  else {
+                            jqInputUnit.addClass('input-error');
+                            errStr.push('non-valid unit');
+                        }
+                    }
+
+                    if (jqInputCode.data('use') === 'true') {
+                        payload.parameters.code = '';
+                        $('#telldus-row-addedit-parameter-code input:checked').each(function () {
+                            if ($(this).val() === 'true') {
+                                payload.parameters.code += '1';
+                            } else {
+                                payload.parameters.code += '0';
+                            }
+                        });
+                    }
+
+                    if (jqInputName.val().trim().length > 0) {
+                        payload.name = jqInputName.val().trim();
+                        jqInputName.removeClass('input-error');
+                    } else {
+                        errStr.push('name is left blank');
+                        jqInputName.addClass('input-error');
+                    }
+                } else {
+                    errStr.push('No device selected');
+                }
+
+
+                if (errStr.length > 0) {
+                    RED.notify('<strong>Telldus error</strong>: ' + errStr.join(', ') + '.', 'error');
+                    return false;
+                }
+                
+                /**
+                 * Send payload 
+                 */
+                var jqXHR = $.post('/telldus/device', payload);
+
+                jqXHR.fail(function(jqXHR) {
+                    RED.notify('<strong>Telldus error (err: 4)</strong>: ' + jqXHR.responseText, 'error');
+                });
+
+                jqXHR.done(function( data, textStatus, jqXHR ) {
+                    var res = JSON.parse(jqXHR.responseText);
+                    if (res.status === 'added') {
+                        RED.notify('<strong>Device added!</strong>', 'success');
+                        getAllDevicesAndPopulateLists();
+                        $("#telldus-dialog-add-edit-device").dialog('close');
+                    } else {
+                        RED.notify('<strong>Telldus error (err: 5)</strong>: Could not add device: ' + res.status, 'error');
+                    }
+                });
+
+
+            }
+
+            /**
+             * Reset all input fields (like if dialog has been opened before)
+             */
+            function resetAllParametersFields() {
+                $('.telldus-addedit-parameter-row').hide();
+                $('#telldus-row-addedit-devices').hide();
+                $('#telldus-addedit-parameter-house-number').val('');
+                $('#telldus-addedit-parameter-house-letter').val('');
+                $('#telldus-addedit-parameter-unit').val('');
+                $('#telldus-addedit-name').val('');
+                $('.telldus-addedit-param-input').data('use', 'false');
+                $('.telldus-code-block input[value="false"]').prop('checked', true);
+                $('.telldus-code-block input[value="true"]').prop('checked', false);
+            }
+
+
             /**
              * Event Listener - "Brands" Select Box
              * Update "Device" Select Box when "Brands" Select Box is changed.
              */
             $('#telldus-select-supported-brands').change(function () {
-                updateDeviceSelect($(this).find(":selected").val());
+                if ($(this).find(":selected").val().length > 0) {
+                    updateDeviceSelect($(this).find(":selected").val());
+                }
             });
 
 
@@ -604,20 +746,12 @@
             $('#telldus-select-supported-devices').change(function () {
                 var jqSelectedDevice = $(this).find(":selected");
                 getAndDisplayModelParameters(
-                        jqSelectedDevice.data('paramhouse'),
-                        jqSelectedDevice.data('paramunit'),
-                        jqSelectedDevice.data('paramcode')
+                    jqSelectedDevice.data('paramhouse'),
+                    jqSelectedDevice.data('paramunit'),
+                    jqSelectedDevice.data('paramcode')
                 );
             });
 
-            function makeNumberIntoRealNumber(str) {
-                var maybeNumber = parseFloat(str);
-                if (isNaN(maybeNumber)) {
-                    return str;
-                } else {
-                    return maybeNumber;
-                }
-            }
 
             /**
              *  Event Listener - Randomize button
@@ -629,19 +763,71 @@
                 $('#' + jqThis.data('randomfor')).val(Math.floor(Math.random() * (max - min) + min));
             });
 
+
+            /**
+             *  Event Listener - Validate name input on blur
+             */
+            $('#telldus-addedit-name').blur(function () {
+                var jqThis = $(this);
+                if (jqThis.val().trim().length > 0) {
+                    jqThis.removeClass('input-error');
+                } else {
+                    jqThis.addClass('input-error');
+                }
+            });
+
+
+            /**
+             *  Event Listener - Validate parameters input on blur
+             */
+            $('.telldus-addedit-param-input').blur(function () {
+                var jqThis = $(this);
+                if (validateParamInput(this) === true) {
+                    jqThis.removeClass('input-error');
+                } else {
+                    jqThis.addClass('input-error');
+                }
+            });
+
+
             function isNumber(str) {
                 return (typeof str === 'number' && (str % 1) === 0);
             }
 
-            function getAndDisplayModelParameters(house, unit, code) {
 
+            /**
+             * Validate parameters inputs
+             */
+            function validateParamInput(elem) {
+                var jqInput = $(elem);
+                var param = jqInput.data('param');
+                jqInput.val(jqInput.val().trim().toUpperCase());
+                var inputValue = jqInput.val();
+                var span = param.split('-');
+                if (span.length === 2) {
+                    if (isNumber(makeNumberIntoRealNumber(span[0])) && isNumber(makeNumberIntoRealNumber(span[1]))) {
+                        return (inputValue >= makeNumberIntoRealNumber(span[0]) && inputValue <= makeNumberIntoRealNumber(span[1]));
+                    } else {
+                        var Regex = new RegExp('^[' + param + ']$');
+                        return Regex.test(inputValue);
+                    }
+                } else {
+                    return false;
+                }
+            }
+
+
+
+            function getAndDisplayModelParameters(house, unit, code) {
                 $('.telldus-addedit-parameter-row').hide();
+                $('.telldus-addedit-param-input').data('use', 'false');
 
                 if (house === undefined && unit === undefined && code === undefined) {
                     return;
                 }
 
                 var jqCurrentRow;
+                var jqCurrentInput;
 
                 /**
                  * Show "House" input field
@@ -653,19 +839,33 @@
                             /**
                              * House is a number span
                              */
+                            $('#telldus-addedit-parameter-house-number')
+                                .data('param', house)
+                                .data('use', 'true')
+                                .attr('maxlength', houseData[1].length);
+
                             jqCurrentRow = $('#telldus-row-addedit-parameter-house-number');
                             jqCurrentRow.find('.telldus-random-button')
-                                    .data('min', houseData[0])
-                                    .data('max', houseData[1]);
-                            jqCurrentRow.find('.telldus-parameter-help-text').text('Number: ' + house);
+                                .data('min', houseData[0])
+                                .data('max', houseData[1]);
+                            jqCurrentRow.find('.telldus-parameter-help-text')
+                                .text('Number: ' + house);
                             jqCurrentRow.show();
                         } else {
                             /**
                              * House is a letter span
                              */
-                            jqCurrentRow = $('#telldus-row-addedit-parameter-house-letter');
-                            jqCurrentRow.find('.telldus-parameter-help-text').text('Characters: ' + house);
-                            jqCurrentRow.show();
+                            $('#telldus-addedit-parameter-house-letter')
+                                .data('param', house)
+                                .data('use', 'true')
+                                .attr('maxlength', houseData[1].length);
+
+                            $('#telldus-row-addedit-parameter-house-letter')
+                                .data('param', house)
+                                .show()
+                                .find('.telldus-parameter-help-text')
+                                    .text('Characters: ' + house);
+
                         }
                     } else {
                         RED.notify('<strong>Telldus error (err: 1)</strong>: "house" could not be understood, Configuration JSON file probably not correct', 'error');
@@ -680,8 +880,14 @@
                     var unitData = unit.split('-');
                     if (unitData.length === 2) {
                         if (isNumber(makeNumberIntoRealNumber(unitData[0])) && isNumber(makeNumberIntoRealNumber(unitData[1]))) {
+                            $('#telldus-addedit-parameter-unit')
+                                .data('param', unit)
+                                .data('use', 'true')
+                                .attr('maxlength', unitData[1].length);
+
                             jqCurrentRow = $('#telldus-row-addedit-parameter-unit');
-                            jqCurrentRow.find('.telldus-parameter-help-text').text('Number: ' + unit);
+                            jqCurrentRow.find('.telldus-parameter-help-text')
+                                .text('Number: ' + unit);
                             jqCurrentRow.show();
                         } else {
                             RED.notify('<strong>Telldus error (err: 2)</strong>: "unit" could not be understood, Configuration JSON file probably not correct', 'error');
@@ -695,30 +901,12 @@
                 /**
                  * Show "Code" input field
                  */
-//                if (code !== 'undefined' && code !== undefined)
-//                telldus-row-addedit-parameter-code
                 if (code === true) {
-                    jqCurrentRow = $('#telldus-row-addedit-parameter-code');
-                    jqCurrentRow.show();
+                    $('#telldus-addedit-parameter-code')
+                        .data('use', 'true');
+                    $('#telldus-row-addedit-parameter-code')
+                        .show();
                 }
-
-                //(?:0|1){10}
-
-//
-
-//                    $('#telldus-row-addedit-parameter-house-number')
-//                    $('#telldus-row-addedit-parameter-unit')
-
-
-
-//                    // todo add error handling
-//                    var jqSelectBrands = $('#telldus-select-supported-brands');
-//                    jqSelectBrands.empty();
-//                    jqSelectBrands.append('<option value=""></option>');
-//                    data.forEach(function(brand) {
-//                        jqSelectBrands.append('<option value="' + brand + '">' + brand + '</option>');
-//                    });
-
             }
 
 
@@ -744,11 +932,7 @@
                         );
                     });
 
-                    console.dir('UPDATING DEVICE');
-                    
                     $('#telldus-row-addedit-devices').show();
-
-
 
                     /**
                      * If no selectedModel is sent in, do a request for the parameters
@@ -765,6 +949,15 @@
                 });
             }
 
+
+            function makeNumberIntoRealNumber(str) {
+                var maybeNumber = parseFloat(str);
+                if (isNaN(maybeNumber)) {
+                    return str;
+                } else {
+                    return maybeNumber;
+                }
+            }
 
 
         }

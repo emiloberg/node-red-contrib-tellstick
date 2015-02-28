@@ -178,6 +178,17 @@ module.exports = function(RED) {
 					return device.type === 'DEVICE';
 				});
 
+				// Sort
+				data.sort(function (a, b) {
+					if (a.name > b.name) {
+						return 1;
+					}
+					if (a.name < b.name) {
+						return -1;
+					}
+					return 0;
+				});
+
 				// Convert method array into properties object for better API.
 				var methods;
 				for (var i = 0; i < data.length; i++) {
@@ -216,6 +227,42 @@ module.exports = function(RED) {
 		res.write(JSON.stringify(telldusDeviceTypes.getModels(req.params.id)));
 		res.end();
 	});
+
+
+	/**
+	 * Add new device
+	 */
+	function addNewDevice(deviceObj, cb) {
+
+		// todo: add error handling and validation.
+
+		var deviceId = telldus.addDeviceSync();
+		telldus.setName(deviceId, deviceObj.name, function () {
+			telldus.setProtocol(deviceId, deviceObj.protocol, function () {
+				telldus.setModel(deviceId, deviceObj.model, function() {
+					Object.keys(deviceObj.parameters).forEach(function (param) {
+						telldus.setDeviceParameterSync(deviceId, param, deviceObj.parameters[param]);
+					});
+					deviceObj.status = 'added';
+					cb(deviceObj);
+				});
+			});
+		});
+	}
+
+	/**
+	 * Add new device
+	 */
+	RED.httpAdmin.post('/telldus/device', function(req, res) {
+		addNewDevice(req.body, function (status) {
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify(status));
+			res.end();
+		});
+
+	});
+
+
 
 
 	/**
