@@ -1,0 +1,81 @@
+<div class="manual-inputs">
+
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="My Sensor">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceclass"><i class="fa fa-dot-circle-o"></i> Class</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceclass">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceprotocol"><i class="fa fa-dot-circle-o"></i> Protocol</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceprotocol">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicegroup"><i class="fa fa-dot-circle-o"></i> Group</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicegroup">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicehouse"><i class="fa fa-dot-circle-o"></i> House</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicehouse">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicemethod"><i class="fa fa-dot-circle-o"></i> Method</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicemethod">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicemodel"><i class="fa fa-dot-circle-o"></i> Model</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicemodel">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceunit"><i class="fa fa-dot-circle-o"></i> Unit</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceunit">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicecode"><i class="fa fa-dot-circle-o"></i> Code</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicecode">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceid"><i class="fa fa-dot-circle-o"></i> Id</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceid">
+    </div>
+</div>
+
+<div id="incoming-transmission-wrapper">
+
+    <div id="listen-button-wrapper">
+        <button type="button" id="telldus-listen" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
+            <span class="ui-button-text"><span class="listen-button-listen">Listen</span><span class="listen-button-stop"><i class="fa fa-spinner fa-spin"></i> Stop listening</span></span>
+        </button>
+    </div>
+
+    <div class="incoming-filters">
+        <label>
+            <input type="checkbox" id="filter-method-learn"> Show method: <span class="telldus-code">learn</span>
+        </label>
+    </div>
+
+    <div id="incoming-transmission">
+        <div class="incoming-box">
+            <table class="command-table transmission-table hide-method-learn">
+                <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>protocol</th>
+                    <th>model</th>
+                    <th>id</th>
+                    <th>house</th>
+                    <th>group</th>
+                    <th>unit</th>
+                    <th>code</th>
+                    <th>method</th>
+                    <th>other data</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>

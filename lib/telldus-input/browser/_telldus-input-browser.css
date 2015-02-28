@@ -1,0 +1,111 @@
+/* Force scrollbar on Mac OS X, so that the user understand what's going on */
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.telldus-code {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+#incoming-transmission-wrapper {
+    width: calc(80% - 2em);
+    float: left;
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
+#listen-button-wrapper {
+    text-align: center;
+}
+
+.incoming-box {
+    max-height: 360px;
+    overflow: scroll;
+    border-top: 1px solid #dddddd;
+    margin-top: 1em;
+}
+
+.transmission-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5em;
+}
+
+.transmission-table th {
+    text-align: left;
+    font-weight: normal;
+}
+
+.transmission-table tbody tr {
+    background-color: #fafafa;
+}
+
+.transmission-table tbody tr:hover {
+    background-color: rgb(250, 255, 209);
+}
+
+.transmission-table tbody td {
+    padding: 0.5em 0.3em;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+.transmission-table tbody td.first {
+    border-left: 1px solid #ddd;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.transmission-table tbody td.last {
+    border-right: 1px solid #ddd;
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+}
+
+.form-row .input-code {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+.manual-inputs {
+    width: 20%;
+    float: left;
+}
+
+.manual-inputs .form-row input {
+    width: calc(100% - 120px);
+}
+
+.listen-button-listen {
+    display: none;
+}
+
+.form-tips {
+    clear: both;
+    max-width: calc(20% - 18px);
+}
+
+.hide-method-learn .method-learn {
+    display: none;
+}
+
+.incoming-filters {
+    float: right;
+    margin-top: calc(-30px + 0.4em);
+}
+
+.incoming-filters input[type="checkbox"] {
+    margin: 0;
+}

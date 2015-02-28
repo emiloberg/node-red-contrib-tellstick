@@ -32,7 +32,11 @@
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-debug": "^2.0.0",
-    "gulp-eslint": "^0.4.2"
+    "gulp-eslint": "^0.4.2",
+    "gulp-file-include": "^0.8.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-watch": "^4.1.1",
+    "run-sequence": "^1.0.2"
   },
   "dependencies": {
     "telldus": "0.0.9"

@@ -1,0 +1,25 @@
+<div class="form-row">
+    <button id="telldus-btn-open-device-list"><i class="fa fa-cog"></i> Configure/Add Devices</button>
+</div>
+<div class="form-row">
+    <label for="node-input-device"><i class="fa fa-lightbulb-o"></i> Device</label>
+    <select id="node-input-device">
+        <option value=""></option>
+    </select>
+</div>
+<div class="form-row node-input-method">
+    <label for="node-input-method"><i class="fa fa-magic"></i> Method</label>
+    <select id="node-input-method">
+        <option value=""></option>
+    </select>
+</div>
+<div class="form-row node-input-dimlevel">
+    <label for="node-input-dimlevel"><i class="fa fa-sliders"></i> Dim value</label>
+    <input type="number" min="0" max="255" step="5" id="node-input-dimlevel" style="width: 9%">
+    <input type="range" id="dimlevel-range" min="0" max="255" step="5" style="width: 60%">
+</div>
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+    <input type="hidden" id="node-input-devicefriendlyname">
+</div>
