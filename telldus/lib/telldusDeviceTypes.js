@@ -35,11 +35,11 @@ var deviceTypes = require('./../resources/deviceTypesConfigurations.json');
 //	return deviceTypes;
 //}
 
-function getProtocols() {
-	return Object.keys(deviceTypes).map(function (protocol) {
-		return protocol;
-	});
-}
+//function getProtocols() {
+//	return Object.keys(deviceTypes).map(function (protocol) {
+//		return protocol;
+//	});
+//}
 
 function getBrands() {
 	var brands = {};

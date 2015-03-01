@@ -141,6 +141,7 @@ a.telldus-button:hover {
 .telldus-code-label {
     vertical-align: top;
 }
+
     </style>
 
     <div class="form-row">
@@ -168,6 +169,7 @@ a.telldus-button:hover {
     <input type="text" id="node-input-name" placeholder="Name">
     <input type="hidden" id="node-input-devicefriendlyname">
 </div>
+
     <div id="telldus-dialog-list-configured-devices" title="Configured Devices">
     <table id="telldus-output-config-devices">
         <thead>
@@ -183,6 +185,7 @@ a.telldus-button:hover {
         </tbody>
     </table>
 </div>
+
     <div id="telldus-dialog-add-edit-device" title="Add/Edit Device">
 
     <div class="form-row">
@@ -286,10 +289,12 @@ a.telldus-button:hover {
 
 </div>
 
+
 </script>
 
 <script type="text/x-red" data-help-name="telldus-out">
     <p>Telldus OUT Help</p>
+
 </script>
 
 <script type="text/javascript">
@@ -326,7 +331,7 @@ a.telldus-button:hover {
             getAllDevicesAndPopulateLists();
 
             /*eslint-env browser, jquery */
-/*global $, RED */
+/*global $, RED, devices */
 
 'use strict';
 
@@ -337,7 +342,7 @@ a.telldus-button:hover {
  */
 $('#telldus-btn-open-device-list' ).click(function(event){
 	event.preventDefault();
-	$( "#telldus-dialog-list-configured-devices" ).dialog( "open" );
+	$('#telldus-dialog-list-configured-devices').dialog('open');
 });
 
 
@@ -346,10 +351,11 @@ $('#telldus-btn-open-device-list' ).click(function(event){
  * Show/Hide user inputable fields.
  */
 $('#node-input-device').change(function() {
-	var curDeviceId = $('#node-input-device').val();
+	var jqNodeInputDevice = $('#node-input-device');
+	var curDeviceId = jqNodeInputDevice.val();
 	if (curDeviceId !== null) {
-		$('#node-input-devicefriendlyname').val($('#node-input-device option:selected').text());
-		showHideMethods(curDeviceId, $("#node-input-method").val());
+		$('#node-input-devicefriendlyname').val(jqNodeInputDevice.find('option:selected').text());
+		showHideMethods(curDeviceId, $('#node-input-method').val());
 	}
 });
 $('#node-input-method').change(function() {
@@ -371,10 +377,14 @@ $('#node-input-dimlevel').change(function() {
  * or hide it, if no device is selected.
  */
 function showHideMethods(selectedDeviceId, selectedMethod) {
+	var jqNodeInputMethod = $('#node-input-method');
 	if (selectedDeviceId) {
 		// Get data for current device
+
 		var curDevice = devices.filter(function (device) {
+			/*eslint-disable eqeqeq */
 			return device.id == selectedDeviceId;
+			/*eslint-enable eqeqeq */
 		});
 		if (curDevice.length === 0) {
 			RED.notify('<strong>Error</strong>: could not find device with id \'' + selectedDeviceId + '\' configured on Telldus device', 'error');
@@ -384,20 +394,20 @@ function showHideMethods(selectedDeviceId, selectedMethod) {
 		$('.node-input-method').show();
 
 		// Populate method select
-		$('#node-input-method option[value!=""]').remove();
+		jqNodeInputMethod.find('option[value!=""]').remove();
 		Object.keys(curDevice.methods).forEach(function (key) {
 			if (key !== 'learn') {
-				$('#node-input-method')
+				jqNodeInputMethod
 					.append($('<option>', {value: key})
 						.text(key));
 			}
 		});
-		$('#node-input-method option[value="' + selectedMethod + '"]').prop('selected', true);
+		jqNodeInputMethod.find('option[value="' + selectedMethod + '"]').prop('selected', true);
 	} else {
 		$('.node-input-method').hide();
 	}
 
-	showHideDim($("#node-input-method").val());
+	showHideDim(jqNodeInputMethod.val());
 }
 
 
@@ -598,10 +608,10 @@ function saveAddEdit() {
 	 * Validate every input and build payload object
 	 */
 	var errStr = [];
-	var jqSelectedBrands = $('#telldus-select-supported-brands :selected');
-	var jqSelectedDevice = $('#telldus-select-supported-devices :selected');
+	var jqSelectedBrands = $('#telldus-select-supported-brands').find(':selected');
+	var jqSelectedDevice = $('#telldus-select-supported-devices').find(':selected');
 
-	$('#telldus-dialog-add-edit-device .input-error').removeClass('input-error');
+	$('#telldus-dialog-add-edit-device').find('.input-error').removeClass('input-error');
 
 	var payload = {
 		model: jqSelectedDevice.data('model'),
@@ -646,7 +656,7 @@ function saveAddEdit() {
 
 		if (jqInputCode.data('use') === 'true') {
 			payload.parameters.code = '';
-			$('#telldus-row-addedit-parameter-code input:checked').each(function () {
+			$('#telldus-row-addedit-parameter-code').find('input:checked').each(function () {
 				if ($(this).val() === 'true') {
 					payload.parameters.code += '1';
 				} else {
