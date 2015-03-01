@@ -200,28 +200,31 @@
 
 
 <script type="text/javascript">
-    'use strict';
+    /*jslint browser: true*/
+/*global $, RED, window */
+
+'use strict';
 
 // Todo, check all jQuery selectors, they will catch _ALL_ nodes, not just this one.
-RED.nodes.registerType('telldus-input',{
+RED.nodes.registerType('telldus-input', {
 	category: 'config',
 	defaults: {
-		name:           { value: '', required: true},
-		deviceclass:    { value: ''},
+		name: { value: '', required: true},
+		deviceclass: { value: ''},
 		deviceprotocol: { value: ''},
-		devicegroup:    { value: ''},
-		devicehouse:    { value: ''},
-		devicemethod:   { value: ''},
-		devicemodel:    { value: ''},
-		deviceunit:     { value: ''},
-		devicecode:     { value: ''},
-		deviceid:       { value: ''}
+		devicegroup: { value: ''},
+		devicehouse: { value: ''},
+		devicemethod: { value: ''},
+		devicemodel: { value: ''},
+		deviceunit: { value: ''},
+		devicecode: { value: ''},
+		deviceid: { value: ''}
 	},
 	label: function() {
 		return this.name || 'Unnamed';
 	},
 	oneditprepare: function() {
-		'use strict';
+
 		var isListening = true;
 
 		/**
@@ -367,7 +370,7 @@ RED.nodes.registerType('telldus-input',{
 		 * Ask server to start sending incmming radio data to browser,
 		 * over websockets. And start listening to WebSockets.
 		 */
-		RED.comms.subscribe("telldus-transmission", window.telldus.inputConfigListener);
+		RED.comms.subscribe('telldus-transmission', window.telldus.inputConfigListener);
 
 		// todo change to get status
 //            $.getJSON('telldus/send-raw-data-over-ws/start', function(data) {
@@ -379,16 +382,16 @@ RED.nodes.registerType('telldus-input',{
 
 	},
 	oneditcancel: function() {
-		RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
+		RED.comms.unsubscribe('telldus-transmission', window.telldus.inputConfigListener);
 	},
 	oneditsave: function() {
-		RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
+		RED.comms.unsubscribe('telldus-transmission', window.telldus.inputConfigListener);
 	},
 	ondelete: function() { // todo: remove this. ondelete will be deprecated in favor of oneditdelete. https://github.com/node-red/node-red/issues/561#issuecomment-74238250
-		RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
+		RED.comms.unsubscribe('telldus-transmission', window.telldus.inputConfigListener);
 	},
 	oneditdelete: function() {
-		RED.comms.unsubscribe("telldus-transmission", window.telldus.inputConfigListener);
+		RED.comms.unsubscribe('telldus-transmission', window.telldus.inputConfigListener);
 	}
 });
 
