@@ -11,7 +11,7 @@ var watch = require('gulp-watch');
 var runSequence = require('run-sequence');
 
 gulp.task('lint', function () {
-    return gulp.src(['telldus/*.js', 'telldus/lib/*.js', 'telldus/*.html', 'telldus/lib/*.html'])
+    return gulp.src(['telldus/lib/*.js', 'lib/**/*.js'])
         .pipe(debug())
         .pipe(eslint())
         .pipe(eslint.format())
@@ -19,7 +19,7 @@ gulp.task('lint', function () {
 });
 
 
-gulp.task('merge-files', function() {
+gulp.task('build', function() {
 	gulp.src(['lib/*.js-template'])
 		.pipe(fileinclude({
 			prefix: '@@',
@@ -43,7 +43,7 @@ gulp.task('merge-files', function() {
 
 gulp.task('watch-files', function() {
 	watch(['lib/*.js-include', 'lib/**/*.js-include', 'lib/*.html', 'lib/**/*.html'], function() {
-		runSequence('merge-files');
+		runSequence('build');
 	});
 });
 
