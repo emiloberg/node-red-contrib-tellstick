@@ -42,7 +42,7 @@ gulp.task('build', function() {
 });
 
 gulp.task('watch-files', function() {
-	watch(['lib/*.js-include', 'lib/**/*.js-include', 'lib/*.html', 'lib/**/*.html'], function() {
+	watch(['lib/*.js', 'lib/**/*.js', 'lib/*.html', 'lib/**/*.html'], function() {
 		runSequence('build');
 	});
 });
