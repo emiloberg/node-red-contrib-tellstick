@@ -293,8 +293,7 @@ a.telldus-button:hover {
 </script>
 
 <script type="text/x-red" data-help-name="telldus-out">
-    <p>Telldus OUT Help</p>
-
+    <p>Telldus OUT</p>
 </script>
 
 <script type="text/javascript">
@@ -422,6 +421,7 @@ function showHideDim(currentMethod) {
 		$('.node-input-dimlevel').hide();
 	}
 }
+
             /*eslint-env browser, jquery */
 /*global node, showHideMethods, $ */
 
@@ -543,10 +543,28 @@ function getAllDevicesAndPopulateLists() {
 }
 /*eslint-enable no-unused-vars*/
 
-$('.telldus-invoke-method-link').click(function(event){
-	event.preventDefault();
-	$('#telldus-dialog-list-configured-devices').dialog('open');
+$('body').on('click', '.telldus-invoke-method-link', function() {
+	var jqThis = $(this);
+	var outObj = {
+		id: jqThis.data('deviceid') || '',
+		method: jqThis.data('method') || '',
+		value: jqThis.data('methodvalue') || ''
+	};
+
+	$.getJSON('telldus/invoke/' + outObj.id + '/' + outObj.method + '/' + outObj.value, function(data) {
+
+	});
+
+	console.dir(outObj);
+
+	//<a href="#" class="telldus-invoke-method-link" data-method="dim" data-methodvalue="64" data-deviceid="5"><i class="fa fa-lightbulb-o telldus-status-icon-25 telldus-status-icon telldus-status-icon-button"></i></a>
 });
+
+//$('.telldus-invoke-method-link').click(function(event){
+//	event.preventDefault();
+//	console.log('APA');
+//	//$('#telldus-dialog-list-configured-devices').dialog('open');
+//});
 
             /*eslint-env browser, jquery */
 /*global RED, window */
@@ -951,6 +969,7 @@ function makeNumberIntoRealNumber(str) {
 		return maybeNumber;
 	}
 }
+
 
         }
     });
