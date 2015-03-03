@@ -101,10 +101,20 @@ a.telldus-button:hover {
 #telldus-btn-open-device-list,
 .telldus-list-configured-device-dialog .ui-dialog-buttonset button.telldus-btn-add-new-device {
     float: left;
-    background-color: #337ab7;
+    background-color: rgba(51, 122, 183, 1.0);
     border: #2e6da4;
     color: white;
     padding: 0.3em 1em;
+}
+
+#telldus-btn-open-device-list:hover,
+.telldus-list-configured-device-dialog .ui-dialog-buttonset button.telldus-btn-add-new-device:hover {
+    background-color: rgba(51, 122, 183, 0.7);
+}
+
+#telldus-btn-open-device-list {
+    padding: 0.7em 1em;
+    width: 218px;
 }
 
 #telldus-row-addedit-devices,
@@ -142,6 +152,15 @@ a.telldus-button:hover {
     vertical-align: top;
 }
 
+.telldus-add-edit-device-dialog .ui-dialog-buttonset {
+    width: 100%;
+    text-align: right;
+}
+
+.telldus-add-edit-device-dialog .ui-dialog-buttonset button.telldus-remove-device-btn {
+    float: left;
+    margin-left: 0.6em;
+}
     </style>
 
     <div class="form-row">
@@ -170,7 +189,7 @@ a.telldus-button:hover {
     <input type="hidden" id="node-input-devicefriendlyname">
 </div>
 
-    <div id="telldus-dialog-list-configured-devices" title="Configured Devices">
+    <div id="telldus-dialog-list-configured-devices" title="Devices">
     <table id="telldus-output-config-devices">
         <thead>
         <tr>
@@ -233,53 +252,53 @@ a.telldus-button:hover {
         <div class="telldus-code-block-wrapper">
 
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-1" value="true">
-                <input type="radio" name="telldus-code-1" value="false" checked="checked">
+                <input type="radio" name="telldus-code-1" class="telldus-code-1" value="true">
+                <input type="radio" name="telldus-code-1" class="telldus-code-1" value="false" checked="checked">
                 <label for="telldus-code-1">1</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-2" value="true">
-                <input type="radio" name="telldus-code-2" value="false" checked="checked">
+                <input type="radio" name="telldus-code-2" class="telldus-code-2" value="true">
+                <input type="radio" name="telldus-code-2" class="telldus-code-2" value="false" checked="checked">
                 <label for="telldus-code-2">2</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-3" value="true">
-                <input type="radio" name="telldus-code-3" value="false" checked="checked">
+                <input type="radio" name="telldus-code-3" class="telldus-code-3" value="true">
+                <input type="radio" name="telldus-code-3" class="telldus-code-3" value="false" checked="checked">
                 <label for="telldus-code-3">3</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-4" value="true">
-                <input type="radio" name="telldus-code-4" value="false" checked="checked">
+                <input type="radio" name="telldus-code-4" class="telldus-code-4" value="true">
+                <input type="radio" name="telldus-code-4" class="telldus-code-4" value="false" checked="checked">
                 <label for="telldus-code-4">4</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-5" value="true">
-                <input type="radio" name="telldus-code-5" value="false" checked="checked">
+                <input type="radio" name="telldus-code-5" class="telldus-code-5" value="true">
+                <input type="radio" name="telldus-code-5" class="telldus-code-5" value="false" checked="checked">
                 <label for="telldus-code-5">5</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-6" value="true">
-                <input type="radio" name="telldus-code-6" value="false" checked="checked">
+                <input type="radio" name="telldus-code-6" class="telldus-code-6" value="true">
+                <input type="radio" name="telldus-code-6" class="telldus-code-6" value="false" checked="checked">
                 <label for="telldus-code-6">A</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-7" value="true">
-                <input type="radio" name="telldus-code-7" value="false" checked="checked">
+                <input type="radio" name="telldus-code-7" class="telldus-code-7" value="true">
+                <input type="radio" name="telldus-code-7" class="telldus-code-7" value="false" checked="checked">
                 <label for="telldus-code-7">B</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-8" value="true">
-                <input type="radio" name="telldus-code-8" value="false" checked="checked">
+                <input type="radio" name="telldus-code-8" class="telldus-code-8" value="true">
+                <input type="radio" name="telldus-code-8" class="telldus-code-8" value="false" checked="checked">
                 <label for="telldus-code-8">C</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-9" value="true">
-                <input type="radio" name="telldus-code-9" value="false" checked="checked">
+                <input type="radio" name="telldus-code-9" class="telldus-code-9" value="true">
+                <input type="radio" name="telldus-code-9" class="telldus-code-9" value="false" checked="checked">
                 <label for="telldus-code-9">D</label>
             </div>
             <div class="telldus-code-block">
-                <input type="radio" name="telldus-code-10" value="true">
-                <input type="radio" name="telldus-code-10" value="false" checked="checked">
+                <input type="radio" name="telldus-code-10" class="telldus-code-10" value="true">
+                <input type="radio" name="telldus-code-10" class="telldus-code-10" value="false" checked="checked">
                 <label for="telldus-code-10">E</label>
             </div>
 
@@ -315,6 +334,9 @@ a.telldus-button:hover {
             if (this.name) {
                 return this.name;
             } else if (this.devicefriendlyname && this.method) {
+                if (this.method === 'dim') {
+                    return this.devicefriendlyname + ' [' +  this.method + ': ' + Math.round((this.dimlevel/255)*100) + '%]';
+                }
                 return this.devicefriendlyname + ' [' +  this.method + ']';
             } else if (this.devicefriendlyname) {
                 return this.devicefriendlyname;
@@ -423,7 +445,7 @@ function showHideDim(currentMethod) {
 }
 
             /*eslint-env browser, jquery */
-/*global node, showHideMethods, $ */
+/*global node, showHideMethods, $, RED */
 
 /**
  * Configure list configured devices dialog
@@ -441,7 +463,9 @@ $('#telldus-dialog-list-configured-devices').dialog({
 			text: 'Add New Device',
 			class: 'telldus-btn-add-new-device',
 			click: function() {
-				$('#telldus-dialog-add-edit-device').dialog('open');
+				var jqAddEditDialog = $('#telldus-dialog-add-edit-device');
+				jqAddEditDialog.data('incomingDevice', '');
+				jqAddEditDialog.dialog('open');
 			}
 		},
 		{
@@ -492,9 +516,9 @@ function deviceObjToButtons(deviceObj) {
 }
 
 
-function methodObjToLearnButton(methodObj) {
-	if (methodObj.learn) {
-		return '<a href="#" class="telldus-button">Learn</a>';
+function deviceObjToLearnButton(deviceObj) {
+	if (deviceObj.methods.learn) {
+		return '<a href="#" class="telldus-invoke-method-link telldus-button" data-method="learn" data-deviceid="' + deviceObj.id + '">Learn</a>';
 	} else {
 		return '';
 	}
@@ -507,7 +531,7 @@ function methodObjToLearnButton(methodObj) {
 /*eslint-disable no-unused-vars*/
 var devices = [];
 function getAllDevicesAndPopulateLists() {
-	$.getJSON('telldus/configured-devices', function(data) {
+	$.getJSON('telldus/device', function(data) {
 		devices = data;
 		var jqOutputConfigDevices = $('#telldus-output-config-devices').find('tbody');
 		var jqNodeInputDevice = $('#node-input-device');
@@ -526,12 +550,12 @@ function getAllDevicesAndPopulateLists() {
 			jqOutputConfigDevices
 				.append(
 				'<tr>' +
-				'<td>' + statusObjToStr(device.status) + '</td>' +
-				'<td>' + device.name + '</td>' +
+				'<td class="telldus-status-column">' + statusObjToStr(device.status) + '</td>' +
+				'<td class="telldus-name-column">' + device.name + '</td>' +
 				'<td>' + deviceObjToButtons(device) + '</td>' +
-				'<td>' + methodObjToLearnButton(device.methods) + '</td>' +
+				'<td>' + deviceObjToLearnButton(device) + '</td>' +
 				'<td class="telldus-config-column">' +
-				'<a href="#" class="telldus-button">Configure</a>' +
+				'<a href="#" data-deviceid="' + device.id + '" class="telldus-config-device-button telldus-button">Configure</a>' +
 				'</td>' +
 				'<tr>'
 			);
@@ -543,28 +567,55 @@ function getAllDevicesAndPopulateLists() {
 }
 /*eslint-enable no-unused-vars*/
 
-$('body').on('click', '.telldus-invoke-method-link', function() {
+var jqBody = $('body');
+
+jqBody.on('click', '.telldus-invoke-method-link', function() {
 	var jqThis = $(this);
+	var jqDeviceTableRow = jqThis.parents('tr');
+	var jqStatus = jqDeviceTableRow.find('.telldus-status-column');
+	var deviceName = jqDeviceTableRow.find('.telldus-name-column').text();
 	var outObj = {
 		id: jqThis.data('deviceid') || '',
 		method: jqThis.data('method') || '',
 		value: jqThis.data('methodvalue') || ''
 	};
 
-	$.getJSON('telldus/invoke/' + outObj.id + '/' + outObj.method + '/' + outObj.value, function(data) {
+	$.getJSON('telldus/invoke/' + outObj.id + '/' + outObj.method + '/' + outObj.value)
+		.done(function(data) {
+			// Send notification message
+			if (data.method === 0) {
+				RED.notify(deviceName + ': turned off', 'success');
+			} else if (data.method === 1) {
+				RED.notify(deviceName + ': turned on', 'success');
+			} else if (data.method === 2) {
+				RED.notify(deviceName + ': dimmed to ' + Math.round((data.dimlevel / 255) * 100) + '%', 'success');
+			} else if (data.method === 3) {
+				RED.notify(deviceName + ': bell called', 'success');
+			} else if (data.method === 4) {
+				RED.notify(deviceName + ': learn command sent', 'success');
+			}
 
-	});
-
-	console.dir(outObj);
-
-	//<a href="#" class="telldus-invoke-method-link" data-method="dim" data-methodvalue="64" data-deviceid="5"><i class="fa fa-lightbulb-o telldus-status-icon-25 telldus-status-icon telldus-status-icon-button"></i></a>
+			// Update status column in table
+			jqStatus.html(statusObjToStr(data.status));
+		})
+		.fail(function(data) {
+			RED.notify('<strong>Telldus error (err: 7): </strong>' + JSON.parse(data.responseText).errWarnStr, 'error');
+		});
 });
 
-//$('.telldus-invoke-method-link').click(function(event){
-//	event.preventDefault();
-//	console.log('APA');
-//	//$('#telldus-dialog-list-configured-devices').dialog('open');
-//});
+jqBody.on('click', '.telldus-config-device-button', function() {
+	$.getJSON('telldus/device/' + $(this).data('deviceid'))
+		.done(function(data) {
+
+			$('#telldus-dialog-add-edit-device')
+				.data('incomingDevice', data)
+				.dialog('open');
+		})
+		.fail(function(data) {
+			RED.notify('<strong>Telldus error (err: 7): </strong>' + JSON.parse(data.responseText).errStr, 'error');
+		});
+
+});
 
             /*eslint-env browser, jquery */
 /*global RED, window */
@@ -579,29 +630,29 @@ $('#telldus-dialog-add-edit-device').dialog({
 	autoOpen: false,
 	modal: true,
 	width: 700,
-	maxHeight: ( $(window).height() - ( $(window).height() / 10) ),
-	buttons: [
-		{
-			text: 'Save Device',
-			click: function() {
-				var success = saveAddEdit();
-				if (success) {
-					$(this).dialog('close');
+	height: 350,
+	//position: ['middle', 20],
+	open: function() {
+		var dialogTitle = 'Add New Device';
+		var dialogButtons = [
+			{
+				text: 'Cancel',
+				click: function() {
+					$( this ).dialog('close');
 				}
 			}
-		},
-		{
-			text: 'Cancel',
-			click: function() {
-				$( this ).dialog('close');
-			}
-		}
-	],
-	close: function() {
-		console.log('Dialog was closed');
-	},
-	open: function() {
+		];
+
 		resetAllParametersFields();
+
+		var incomingDevice = $(this).data('incomingDevice');
+		var isUpdatingDevice = false;
+
+		if (typeof incomingDevice === 'object') {
+			isUpdatingDevice = true;
+		} else {
+			incomingDevice = {};
+		}
 
 		/**
 		 * Make request to server for all supported Brands and
@@ -612,15 +663,111 @@ $('#telldus-dialog-add-edit-device').dialog({
 			var jqSelectBrands = $('#telldus-select-supported-brands');
 			jqSelectBrands.empty();
 			jqSelectBrands.append('<option value=""></option>');
+			var html = '';
 			data.forEach(function(brand) {
-				jqSelectBrands.append('<option value="' + brand + '">' + brand + '</option>');
+				html = '<option value="' + brand + '"';
+				if (incomingDevice.brand === brand) {
+					html += ' selected';
+				}
+				html += '>' + brand + '</option>';
+				jqSelectBrands.append(html);
 			});
+
+			/**
+			 * Set all input fields to current value if we're _updating_ a device.
+			 */
+			if (isUpdatingDevice) {
+				updateDeviceSelect(incomingDevice.brand, incomingDevice.model);
+				$('#telldus-addedit-name').val(incomingDevice.name);
+				$('#telldus-addedit-parameter-house-letter').val(incomingDevice.parameters.house);
+				$('#telldus-addedit-parameter-house-number').val(incomingDevice.parameters.house);
+				$('#telldus-addedit-parameter-unit').val(incomingDevice.parameters.unit);
+
+				// Update Code block
+				if (incomingDevice.parameters.hasOwnProperty('code')) {
+					var jqCodeBlockWrapper = $('.telldus-code-block-wrapper');
+					var codeArr = incomingDevice.parameters.code.split('');
+					for (var i = 0; i < codeArr.length; i++) {
+						if (codeArr[i] === '1') {
+							jqCodeBlockWrapper.find('.telldus-code-' + (i + 1) + '[value="true"]').prop('checked', true);
+						}
+					}
+				}
+
+				// Set title
+				dialogTitle = "Update Device '" + incomingDevice.name + "'";
+
+				// Add Update and delete button
+				dialogButtons.unshift(
+					{
+						text: 'Update Device',
+						click: function() {
+							var success = saveAddEdit(incomingDevice.id);
+							if (success) {
+								$(this).dialog('close');
+							}
+						}
+					}
+				);
+				dialogButtons.unshift(
+					{
+						text: 'Remove Device',
+						class: 'telldus-remove-device-btn',
+						click: function() {
+							/*eslint-disable no-alert*/
+							if (window.confirm('Are you sure you want to remove device\n' + incomingDevice.name) === true) {
+								var success = deleteDevice(incomingDevice.id);
+								if (success) {
+									$(this).dialog('close');
+								}
+							}
+							/*eslint-enable no-alert*/
+						}
+					}
+				);
+			} else {
+				// Add save button
+				dialogButtons.unshift(
+					{
+						text: 'Save Device',
+						click: function() {
+							var success = saveAddEdit();
+							if (success) {
+								$(this).dialog('close');
+							}
+						}
+					}
+				);
+			}
+
+			// Set Save/Update/Close buttons and dialog title
+			$('#telldus-dialog-add-edit-device')
+				.dialog('option', 'buttons', dialogButtons)
+				.dialog('option', 'title', dialogTitle);
+
 		});
 	}
 });
 
+function deleteDevice(deviceId) {
 
-function saveAddEdit() {
+	var jqXHR = $.ajax('/telldus/device/' + deviceId, {
+		type: 'DELETE'
+	});
+	jqXHR.fail(function(jqXHRObj) {
+		RED.notify('<strong>Telldus error (err: 10)</strong>: ' + JSON.stringify(jqXHRObj.responseText), 'error');
+	});
+	jqXHR.done(function() {
+			RED.notify('<strong>Device deleted!</strong>', 'success');
+			/*eslint-disable no-undef */
+			getAllDevicesAndPopulateLists();
+			/*eslint-ensable no-undef */
+			$('#telldus-dialog-add-edit-device').dialog('close');
+	});
+
+}
+
+function saveAddEdit(updateDeviceId) {
 
 	/**
 	 * Validate every input and build payload object
@@ -700,25 +847,35 @@ function saveAddEdit() {
 		return false;
 	}
 
+	var txtVerb = 'added';
+	var txtErrorVerb = 'add';
+
+	// Add id to the payload to tell the server that we're _updating_ this,
+	// and set the text for output.
+	if (updateDeviceId) {
+		payload.id = updateDeviceId;
+		txtVerb = 'updated';
+		txtErrorVerb = 'update';
+	}
+
+
 	/**
 	 * Send payload
 	 */
 	var jqXHR = $.post('/telldus/device', payload);
-
 	jqXHR.fail(function(jqXHRObj) {
 		RED.notify('<strong>Telldus error (err: 4)</strong>: ' + jqXHRObj.responseText, 'error');
 	});
-
 	jqXHR.done(function( data, textStatus, jqXHRObj) {
 		var res = JSON.parse(jqXHRObj.responseText);
-		if (res.status === 'added') {
-			RED.notify('<strong>Device added!</strong>', 'success');
+		if (res.status === 'added' || res.status === 'updated') {
+			RED.notify('<strong>Device ' + txtVerb + '!</strong>', 'success');
 			/*eslint-disable no-undef */
 			getAllDevicesAndPopulateLists();
 			/*eslint-ensable no-undef */
 			$('#telldus-dialog-add-edit-device').dialog('close');
 		} else {
-			RED.notify('<strong>Telldus error (err: 5)</strong>: Could not add device: ' + res.status, 'error');
+			RED.notify('<strong>Telldus error (err: 5)</strong>: Could not ' + txtErrorVerb + ' device: ' + res.status, 'error');
 		}
 	});
 
@@ -927,30 +1084,56 @@ function getAndDisplayModelParameters(house, unit, code) {
  * Select Box with those devices.
  */
 function updateDeviceSelect(brandName, selectedModel) {
+
+	var isUpdating = false;
+	if (selectedModel) {
+		isUpdating = true;
+	}
+
+	var selected = {
+		model: selectedModel || '',
+		house: '',
+		unit: '',
+		code: ''
+	};
 	$.getJSON('telldus/supported-devices/' + brandName, function(data) {
 		var jqSelectDevices = $('#telldus-select-supported-devices');
 		jqSelectDevices.empty();
+		var html = '';
 		data.forEach(function (device) {
-			jqSelectDevices.append(
-				'<option data-brand="' + device.brand +
+			html =  '<option ';
+			if (device.model === selected.model) {
+				html += 'selected ';
+				selected.house = device.parameters.house;
+				selected.unit = device.parameters.unit;
+				selected.code = device.parameters.code;
+			}
+			html += 'data-brand="' + device.brand +
 				'" data-model="' + device.model +
 				'" data-protocol="' + device.protocol +
 				'" data-type="' + device.type +
 				'" data-paramhouse="' + device.parameters.house +
 				'" data-paramunit="' + device.parameters.unit +
 				'" data-paramcode="' + device.parameters.code +
-				'">' + device.name + '</option>'
-			);
+				'">' + device.name + '</option>';
+			jqSelectDevices.append(html);
 		});
 
 		$('#telldus-row-addedit-devices').show();
 
 		/**
+		 * If a selectedModel is sent it, display that.
 		 * If no selectedModel is sent in, do a request for the parameters
 		 * for the _first_ device in the list. And display the
 		 * parameters.
 		 */
-		if(!selectedModel) {
+		if(isUpdating) {
+			getAndDisplayModelParameters(
+				selected.house,
+				selected.unit,
+				selected.code
+			);
+		} else {
 			getAndDisplayModelParameters(
 				data[0].parameters.house,
 				data[0].parameters.unit,

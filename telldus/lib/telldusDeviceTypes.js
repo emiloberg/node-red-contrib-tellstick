@@ -18,6 +18,20 @@ function getBrands() {
 	}).sort();
 }
 
+function getBrandFromModel(modelName) {
+	var ret = '';
+	Object.keys(deviceTypes).forEach(function (protocol) {
+		Object.keys(deviceTypes[protocol]).forEach(function (type) {
+			deviceTypes[protocol][type].devices.forEach(function (device) {
+				if (device.model === modelName) {
+					ret = device.brand;
+				}
+			});
+		});
+	});
+	return ret;
+}
+
 
 function getModels(brandName) {
 	var models = [];
@@ -179,3 +193,4 @@ module.exports.getDevices = getDevices;
 module.exports.getBrands = getBrands;
 module.exports.getModels = getModels;
 module.exports.getParametersValues = getParametersValues;
+module.exports.getBrandFromModel = getBrandFromModel;

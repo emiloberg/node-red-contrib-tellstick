@@ -49,8 +49,14 @@ function normalizeTelldusCommand(incomingMsg, node) {
 		msg.method = 0;
 	} else if (msg.method === 'dim' || msg.method === '2') {
 		msg.method = 2;
+	} else if (msg.method === 'bell' || msg.method === '3') {
+		msg.method = 3;
+	} else if (msg.method === 'learn' || msg.method === '4') {
+		msg.method = 4;
+	} else {
+		msg.err = true;
+		msg.errWarnStr = "No valid method is supplied. Please select a method in the output node, or send a method in the msg: 'msg: {method: 'turnon'}'. Valid method are 'turnon' (or '1'), 'turnoff' (or '0'), 'dim' (or '2')'";
 	}
-
 	/**
 	 * Convert 'dim to 0' to 'turnoff'
 	 */
@@ -80,9 +86,6 @@ function normalizeTelldusCommand(incomingMsg, node) {
 			msg.err = true;
 			msg.errWarnStr = "'method' is set to 'dim' but no valid 'dimlevel' is supplied. Needs to be a number between 0 and 255.";
 		}
-	} else if (!(msg.method === 0 || msg.method === 1)) {
-		msg.err = true;
-		msg.errWarnStr = "No valid method is supplied. Please select a method in the output node, or send a method in the msg: 'msg: {method: 'turnon'}'. Valid method are 'turnon' (or '1'), 'turnoff' (or '0'), 'dim' (or '2')'";
 	}
 
 	return msg;
@@ -96,26 +99,47 @@ function invokeTelldusMethod(msg, cb) {
 	if (msg.method === 0) {
 		telldus.turnOff(msg.device, function(err) {
 			if (err) {
-				cb(err);
+				(cb(err) || Function)();
+			} else {
+				(cb(null, { name: 'OFF' }) || Function)();
 			}
-			cb();
+
 		});
 	} else if (msg.method === 1) {
 		telldus.turnOn(msg.device, function(err) {
 			if (err) {
-				cb(err);
+				(cb(err) || Function)();
+			} else {
+				(cb(null, { name: 'ON' }) || Function)();
 			}
-			cb();
 		});
 	} else if (msg.method === 2) {
 		telldus.dim(msg.device, msg.dimlevel, function(err) {
 			if (err) {
-				cb(err);
+				(cb(err) || Function)();
+			} else {
+				(cb(null, { name: 'DIM', level: msg.dimlevel }) || Function)();
 			}
-			cb();
+		});
+	} else if (msg.method === 3) {
+		telldus.bell(msg.device, function(err) {
+			if (err) {
+				(cb(err) || Function)();
+			} else {
+				(cb() || Function)();
+			}
+		});
+	} else if (msg.method === 4) {
+		telldus.learn(msg.device, function(err) {
+			if (err) {
+				(cb(err) || Function)();
+			} else {
+				(cb() || Function)();
+			}
 		});
 	}
 }
+
 
 
 
@@ -166,7 +190,7 @@ module.exports = function(RED) {
 
 			invokeTelldusMethod(msg, function(err) {
 				if (err) {
-					node.error(JSON.stringify(err));
+					node.error(JSON.stringify(err.message));
 				}
 			});
 		});
@@ -175,55 +199,7 @@ module.exports = function(RED) {
 
 
 	/**
-	 * Give the client a list of all configured devices when asked for.
-	 */
-	RED.httpAdmin.get('/telldus/configured-devices', function(req, res) {
-		telldus.getDevices(function(err, data) {
-			if (err) {
-				res.writeHead(500, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify(err));
-				res.end();
-			} else {
-
-				// Unsure if there's anything else than 'devices' but lets filter
-				// them anyways.
-				data = data.filter(function (device) {
-					return device.type === 'DEVICE';
-				});
-
-				// Sort
-				data.sort(function (a, b) {
-					if (a.name > b.name) {
-						return 1;
-					}
-					if (a.name < b.name) {
-						return -1;
-					}
-					return 0;
-				});
-
-				// Convert method array into properties object for better API.
-				var methods;
-				for (var i = 0; i < data.length; i++) {
-					methods = {};
-					/*eslint-disable no-loop-func */
-					data[i].methods.forEach(function (method) {
-						methods[method.toLowerCase()] = true;
-					});
-					/*eslint-enable no-loop-func */
-					data[i].methods = methods;
-				}
-
-				res.writeHead(200, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify(data));
-				res.end();
-			}
-		});
-	});
-
-
-	/**
-	 * Give the client a list of all device types when asked for
+	 * API: Give the client a list of all brands
 	 */
 	RED.httpAdmin.get('/telldus/supported-brands', function(req, res) {
 		res.writeHead(200, {'Content-Type': 'application/json'});
@@ -233,7 +209,7 @@ module.exports = function(RED) {
 
 
 	/**
-	 * Give the client a list of all device types for a given brand when asked for
+	 * API: Give the client a list of all device types for a given brand
 	 */
 	RED.httpAdmin.get('/telldus/supported-devices/:id', function(req, res) {
 		res.writeHead(200, {'Content-Type': 'application/json'});
@@ -245,29 +221,41 @@ module.exports = function(RED) {
 	/**
 	 * Add new device
 	 */
-	function addNewDevice(deviceObj, cb) {
-
+	function addUpdateDevice(updateDeviceId, deviceObj, cb) {
 		// todo: add error handling and validation.
 
-		var deviceId = telldus.addDeviceSync();
+		var deviceId = updateDeviceId;
+		var doneStatus = 'updated';
+		if (updateDeviceId === -1) {
+			deviceId = telldus.addDeviceSync();
+			doneStatus = 'added';
+		}
+
 		telldus.setName(deviceId, deviceObj.name, function () {
 			telldus.setProtocol(deviceId, deviceObj.protocol, function () {
 				telldus.setModel(deviceId, deviceObj.model, function() {
 					Object.keys(deviceObj.parameters).forEach(function (param) {
 						telldus.setDeviceParameterSync(deviceId, param, deviceObj.parameters[param]);
 					});
-					deviceObj.status = 'added';
+					deviceObj.status = doneStatus;
 					cb(deviceObj);
 				});
 			});
 		});
 	}
 
+
 	/**
-	 * Add new device
+	 * API: Add new device/Update device
 	 */
 	RED.httpAdmin.post('/telldus/device', function(req, res) {
-		addNewDevice(req.body, function (status) {
+
+		var updateDeviceId = parseInt(req.body.id);
+		if (!isNumber(updateDeviceId)) {
+			updateDeviceId = -1;
+		}
+
+		addUpdateDevice(updateDeviceId, req.body, function (status) {
 			res.writeHead(200, {'Content-Type': 'application/json'});
 			res.write(JSON.stringify(status));
 			res.end();
@@ -276,82 +264,134 @@ module.exports = function(RED) {
 	});
 
 
+
 	/**
-	 * Invoke method
+	 * API: Invoke method (on, off, dim, bell, learn)
+	 *
 	 */
 	RED.httpAdmin.get('/telldus/invoke/:deviceid/:method/:dimlevel?', function(req, res) {
-
-
 		var incomingMsg = {
 			device: req.params.deviceid,
 			method: req.params.method,
 			dimlevel: req.params.dimlevel || ''
 		};
 
-		var out = incomingMsg;
-		out.err = false;
-		out.warn = false;
-		out.errWarnStr = '';
+		var out = normalizeTelldusCommand(incomingMsg);
 
-		var msg = normalizeTelldusCommand(incomingMsg);
-
-		console.dir(msg);
-
-		if (msg.err === true) {
-			out.errWarnStr = msg.errWarnStr;
+		if (out.err === true) {
 			res.writeHead(400, {'Content-Type': 'application/json'});
 			res.write(JSON.stringify(out));
 			res.end();
 			return;
-		} else if (msg.warn === true) {
-			out.warn = true;
-			out.errWarnStr = msg.errWarnStr;
 		}
 
-		invokeTelldusMethod(msg, function(err) {
+		invokeTelldusMethod(out, function(err, status) {
 			if (err) {
-				out.err(JSON.stringify(err));
-				res.writeHead(400, {'Content-Type': 'application/json'});
+				res.writeHead(500, {'Content-Type': 'application/json'});
+				out.err = true;
+				out.errWarnStr = err.message;
+				res.write(JSON.stringify(out));
+				res.end();
 			} else {
+				out.status = status;
 				res.writeHead(200, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(out));
+				res.end();
 			}
-
-			res.write(JSON.stringify(out));
-			res.end();
-
-			// todo: 1, make dim work. 2, set a notify bar on client, 3. Update status on client
 		});
 	});
 
+
 	/**
-	 * Give the client the parameters for a given model when asked for
+	 * API: Give the client a single device and its configured parameters.
 	 */
-	//RED.httpAdmin.get('/telldus/supported-parameters/:id', function(req, res) {
-	//	res.writeHead(200, {'Content-Type': 'application/json'});
-	//	res.write(JSON.stringify(telldusDeviceTypes.getParameters(req.params.id)));
-	//	res.end();
-	//});
+	RED.httpAdmin.get('/telldus/device/:deviceid', function(req, res) {
+
+		var deviceId = parseInt(req.params.deviceid);
+
+		if (!isNumber(deviceId)) {
+			res.writeHead(400, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({
+				errStr: 'Device needs to be a number'
+			}));
+			res.end();
+			return;
+		}
+
+		telldusDeviceTypes.getDevices(deviceId, function (errDevices, device) {
+			if (errDevices) {
+				res.writeHead(500, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(errDevices));
+				res.end();
+			} else {
+				telldusDeviceTypes.getParametersValues(deviceId, function (errParameters, parameters) {
+					if (errParameters) {
+						res.writeHead(500, {'Content-Type': 'application/json'});
+						res.write(JSON.stringify(errParameters));
+						res.end();
+					} else {
+						device.parameters = parameters;
+						device.brand = telldusDeviceTypes.getBrandFromModel(device.model);
+						res.writeHead(200, {'Content-Type': 'application/json'});
+						res.write(JSON.stringify(device));
+						res.end();
+					}
+				});
+			}
+		});
+	});
 
 
-//	RED.httpAdmin.post('/telldus/devices', function(req, res) {
-//		console.dir('Adding device');
-//		console.dir(req.body);
-//		console.dir(req.body.apa);
-//
-//		res.writeHead(200, {'Content-Type': 'application/json'});
-////		res.write(JSON.stringify(data));
-//		res.end();
-//
-//
-//
-//		//var newDeviceId = telldus.addDeviceSync();
-//		//var setResult = telldus.setNameSync(newDeviceId, 'Newly created');
-//		//
-//		//console.log('newDeviceId', newDeviceId );
-//		//console.log('setResult', setResult );
-//
-//	});
+	/**
+	 * API: Give the client a list of all configured devices
+	 */
+	RED.httpAdmin.get('/telldus/device', function(req, res) {
+		telldusDeviceTypes.getDevices(function (err, data) {
+			if (err) {
+				res.writeHead(500, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(err));
+				res.end();
+				return;
+			}
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify(data));
+			res.end();
+		});
+	});
 
+
+	/**
+	 * API: Delete Device
+	 */
+	RED.httpAdmin.delete('/telldus/device/:id', function(req, res) {
+		var deviceId = parseInt(req.params.id);
+
+		if (!isNumber(deviceId)) {
+			res.writeHead(404, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({
+				errStr: 'deviceId needs to be a number'
+			}));
+			res.end();
+			return;
+		}
+
+		telldus.removeDevice(deviceId, function(err) {
+			if (err) {
+				res.writeHead(404, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify({
+					errStr: err.message
+				}));
+				res.end();
+				return;
+			}
+			res.writeHead(200, {'Content-Type': 'application/json'});
+			res.write(JSON.stringify({
+				id: deviceId,
+				status: 'deleted'
+			}));
+			res.end();
+		});
+	});
 
 
 };

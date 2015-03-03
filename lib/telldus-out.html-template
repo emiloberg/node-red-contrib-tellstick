@@ -33,6 +33,9 @@
             if (this.name) {
                 return this.name;
             } else if (this.devicefriendlyname && this.method) {
+                if (this.method === 'dim') {
+                    return this.devicefriendlyname + ' [' +  this.method + ': ' + Math.round((this.dimlevel/255)*100) + '%]';
+                }
                 return this.devicefriendlyname + ' [' +  this.method + ']';
             } else if (this.devicefriendlyname) {
                 return this.devicefriendlyname;

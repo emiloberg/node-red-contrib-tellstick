@@ -98,10 +98,20 @@ a.telldus-button:hover {
 #telldus-btn-open-device-list,
 .telldus-list-configured-device-dialog .ui-dialog-buttonset button.telldus-btn-add-new-device {
     float: left;
-    background-color: #337ab7;
+    background-color: rgba(51, 122, 183, 1.0);
     border: #2e6da4;
     color: white;
     padding: 0.3em 1em;
+}
+
+#telldus-btn-open-device-list:hover,
+.telldus-list-configured-device-dialog .ui-dialog-buttonset button.telldus-btn-add-new-device:hover {
+    background-color: rgba(51, 122, 183, 0.7);
+}
+
+#telldus-btn-open-device-list {
+    padding: 0.7em 1em;
+    width: 218px;
 }
 
 #telldus-row-addedit-devices,
@@ -137,4 +147,14 @@ a.telldus-button:hover {
 
 .telldus-code-label {
     vertical-align: top;
+}
+
+.telldus-add-edit-device-dialog .ui-dialog-buttonset {
+    width: 100%;
+    text-align: right;
+}
+
+.telldus-add-edit-device-dialog .ui-dialog-buttonset button.telldus-remove-device-btn {
+    float: left;
+    margin-left: 0.6em;
 }
