@@ -193,6 +193,7 @@ a.telldus-button:hover {
     <table id="telldus-output-config-devices">
         <thead>
         <tr>
+            <th>Id</th>
             <th>Status</th>
             <th>Name</th>
             <th>Perform</th>
@@ -550,6 +551,7 @@ function getAllDevicesAndPopulateLists() {
 			jqOutputConfigDevices
 				.append(
 				'<tr>' +
+				'<td>' + device.id + '</td>' +
 				'<td class="telldus-status-column">' + statusObjToStr(device.status) + '</td>' +
 				'<td class="telldus-name-column">' + device.name + '</td>' +
 				'<td>' + deviceObjToButtons(device) + '</td>' +
