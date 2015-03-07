@@ -104,6 +104,7 @@ function normalizeTellstickCommand(incomingMsg, node) {
 /**
  * Queue/Throttle
  */
+// Todo: If this is the first command (within the last X ms). Then run immediately, no need to wait.
 var invocationInterval;
 var invocationQueue = [];
 function queueTellstickMethod(msg, cb) {
