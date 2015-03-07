@@ -1,0 +1,14 @@
+<script type="text/x-red" data-template-name="tellstick-input">
+
+    <style>
+        @@include('tellstick-input/browser/_tellstick-input-browser.css')
+    </style>
+
+    @@include('tellstick-input/browser/_tellstick-input-browser.html')
+
+</script>
+
+
+<script type="text/javascript">
+    @@include('tellstick-input/browser/_tellstick-input-browser.js')
+</script>

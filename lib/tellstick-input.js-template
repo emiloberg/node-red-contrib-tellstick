@@ -1,0 +1,1 @@
+@@include('tellstick-input/server/_tellstick-input-server.js')

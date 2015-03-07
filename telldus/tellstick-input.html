@@ -1,0 +1,393 @@
+<script type="text/x-red" data-template-name="tellstick-input">
+
+    <style>
+        /* Force scrollbar on Mac OS X, so that the user understand what's going on */
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.telldus-code {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+#incoming-transmission-wrapper {
+    width: calc(80% - 2em);
+    float: left;
+    padding-left: 1em;
+    margin-left: 1em;
+}
+
+#listen-button-wrapper {
+    text-align: center;
+}
+
+.incoming-box {
+    max-height: 360px;
+    overflow: scroll;
+    border-top: 1px solid #dddddd;
+    margin-top: 1em;
+}
+
+.transmission-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 0.5em;
+}
+
+.transmission-table th {
+    text-align: left;
+    font-weight: normal;
+}
+
+.transmission-table tbody tr {
+    background-color: #fafafa;
+}
+
+.transmission-table tbody tr:hover {
+    background-color: rgb(250, 255, 209);
+}
+
+.transmission-table tbody td {
+    padding: 0.5em 0.3em;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+.transmission-table tbody td.first {
+    border-left: 1px solid #ddd;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-bottom-left-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.transmission-table tbody td.last {
+    border-right: 1px solid #ddd;
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+}
+
+.form-row .input-code {
+    font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+.manual-inputs {
+    width: 20%;
+    float: left;
+}
+
+.manual-inputs .form-row input {
+    width: calc(100% - 120px);
+}
+
+.listen-button-listen {
+    display: none;
+}
+
+.form-tips {
+    clear: both;
+    max-width: calc(20% - 18px);
+}
+
+.hide-method-learn .method-learn {
+    display: none;
+}
+
+.incoming-filters {
+    float: right;
+    margin-top: calc(-30px + 0.4em);
+}
+
+.incoming-filters input[type="checkbox"] {
+    margin: 0;
+}
+
+    </style>
+
+    <div class="manual-inputs">
+
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-config-input-name" placeholder="My Sensor">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceclass"><i class="fa fa-dot-circle-o"></i> Class</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceclass">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceprotocol"><i class="fa fa-dot-circle-o"></i> Protocol</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceprotocol">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicegroup"><i class="fa fa-dot-circle-o"></i> Group</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicegroup">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicehouse"><i class="fa fa-dot-circle-o"></i> House</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicehouse">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicemethod"><i class="fa fa-dot-circle-o"></i> Method</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicemethod">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicemodel"><i class="fa fa-dot-circle-o"></i> Model</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicemodel">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceunit"><i class="fa fa-dot-circle-o"></i> Unit</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceunit">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicecode"><i class="fa fa-dot-circle-o"></i> Code</label>
+        <input class="device-property input-code" type="text" id="node-config-input-devicecode">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-deviceid"><i class="fa fa-dot-circle-o"></i> Id</label>
+        <input class="device-property input-code" type="text" id="node-config-input-deviceid">
+    </div>
+</div>
+
+<div id="incoming-transmission-wrapper">
+
+    <div id="listen-button-wrapper">
+        <button type="button" id="telldus-listen" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">
+            <span class="ui-button-text"><span class="listen-button-listen">Listen</span><span class="listen-button-stop"><i class="fa fa-spinner fa-spin"></i> Stop listening</span></span>
+        </button>
+    </div>
+
+    <div class="incoming-filters">
+        <label>
+            <input type="checkbox" id="filter-method-learn"> Show method: <span class="telldus-code">learn</span>
+        </label>
+    </div>
+
+    <div id="incoming-transmission">
+        <div class="incoming-box">
+            <table class="command-table transmission-table hide-method-learn">
+                <thead>
+                <tr>
+                    <th>&nbsp;</th>
+                    <th>&nbsp;</th>
+                    <th>protocol</th>
+                    <th>model</th>
+                    <th>id</th>
+                    <th>house</th>
+                    <th>group</th>
+                    <th>unit</th>
+                    <th>code</th>
+                    <th>method</th>
+                    <th>other data</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</script>
+
+
+<script type="text/javascript">
+    /*eslint-env browser, jquery */
+/*global $, RED, window */
+
+'use strict';
+
+// Todo, check all jQuery selectors, they will catch _ALL_ nodes, not just this one.
+RED.nodes.registerType('tellstick-input', {
+	category: 'config',
+	defaults: {
+		name: { value: '', required: true},
+		deviceclass: { value: ''},
+		deviceprotocol: { value: ''},
+		devicegroup: { value: ''},
+		devicehouse: { value: ''},
+		devicemethod: { value: ''},
+		devicemodel: { value: ''},
+		deviceunit: { value: ''},
+		devicecode: { value: ''},
+		deviceid: { value: ''}
+	},
+	label: function() {
+		return this.name || 'Unnamed';
+	},
+	oneditprepare: function() {
+
+		var isListening = true;
+
+		/**
+		 * Make data values in the table a little prettier.
+		 */
+		function printPrettyValue(codeStr) {
+			if (codeStr === undefined) {
+				return '';
+			}
+			return '<span class="telldus-code">' + codeStr + '</span>';
+		}
+
+
+		/**
+		 * Increase dialog window size. This is not done all that beautiful
+		 * but we need a bigger window to play with.
+		 */
+		setTimeout(function () {
+			var jqCurDialog = $("[aria-describedby='node-config-dialog']");
+			var dialogWidth = ($(window).width() - 100);
+			if (dialogWidth > 1400) {
+				dialogWidth = 1400;
+			}
+			jqCurDialog.css('width', dialogWidth);
+			jqCurDialog.css('left', (($(window).width() - dialogWidth) / 2));
+			jqCurDialog.css('top', (($(window).height() - 580) / 2));
+			jqCurDialog.css('min-height', '580px');
+		}, 0);
+
+
+		/**
+		 * Faux stop/start listening. We do actually not stop listening
+		 * when the user clicks to do so. Rather we're setting isListening to
+		 * false and then just stop printing data to the table if that is set
+		 * to false. No need to start/stop the actual listening.
+		 */
+		$('#telldus-listen').click(function () {
+			if (isListening) {
+				isListening = false;
+				$('.listen-button-listen').show();
+				$('.listen-button-stop').hide();
+			} else {
+				isListening = true;
+				$('.listen-button-listen').hide();
+				$('.listen-button-stop').show();
+			}
+		});
+
+		$('#filter-method-learn').click(function () {
+			if($(this).is(':checked')) {
+				$('.transmission-table').removeClass('hide-method-learn');
+			} else {
+				$('.transmission-table').addClass('hide-method-learn');
+			}
+		});
+
+
+		/**
+		 * Move command/sensor data from table to input fields
+		 * when user clicks on "Learn" button.
+		 */
+		$('body').on('click', '.learn-button', function() {
+			// Empty any previous values
+			$('.device-property').val('');
+
+			var data = $(this).data('data').split(';');
+			data.forEach(function (kvp) {
+				$('#node-config-input-device' + kvp.split(':')[0]).val(kvp.split(':')[1]);
+			});
+		});
+
+
+		/**
+		 * Print all incoming data to the table
+		 *
+		 * For some reason, when creating a _new_ config,
+		 * we can't reach 'this' when unloading, Therefor
+		 * we're (for now) polluting the window object by
+		 * attaching a few the listener there.
+		 */
+		window.tellstick = window.tellstick || {};
+		window.tellstick.inputConfigListener = function(topic, rawdata) {
+			if (!isListening) { return; }
+
+			rawdata = rawdata.slice(0, -1);
+			var data = {};
+			rawdata.split(';').forEach(function (kvp) {
+				data[kvp.split(':')[0]] = kvp.split(':')[1];
+			});
+
+			var learnButtonIcon;
+			if (data.class === 'command') {
+				learnButtonIcon = 'fa-mobile';
+			} else if (data.class === 'sensor') {
+				learnButtonIcon = 'fa-bar-chart';
+			} else {
+				learnButtonIcon = 'fa-bullseye';
+			}
+
+			var html = '<tr class="method-' + data.method + '">' +
+				'<td class="first">' +
+				'<button data-data="' + rawdata + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
+				'<span class="ui-button-text">Learn</span>' +
+				'</button>' +
+				'</td>' +
+				'<td>' + '<i class="fa ' + learnButtonIcon + '"></i>' + '</td>' +
+				'<td>' + printPrettyValue(data.protocol) + '</td>' +
+				'<td>' + printPrettyValue(data.model) + '</td>' +
+				'<td>' + printPrettyValue(data.id) + '</td>' +
+				'<td>' + printPrettyValue(data.house) + '</td>' +
+				'<td>' + printPrettyValue(data.group) + '</td>' +
+				'<td>' + printPrettyValue(data.unit) + '</td>' +
+				'<td>' + printPrettyValue(data.code) + '</td>' +
+				'<td>' + printPrettyValue(data.method) + '</td>';
+
+			delete data.class;
+			delete data.protocol;
+			delete data.id;
+			delete data.group;
+			delete data.house;
+			delete data.method;
+			delete data.model;
+			delete data.unit;
+			delete data.code;
+			if (Object.keys(data).length > 0) {
+				html += '<td class="last">';
+				html += Object.keys(data).map(function (key) {
+					return key + ': ' + printPrettyValue(data[key]);
+				}).join('<br>');
+				html += '</td>';
+			} else {
+				html += '<td class="last">&nbsp;</td>';
+			}
+
+
+			html += '</tr>';
+
+			$('.command-table tbody').prepend(html);
+		};
+
+
+		/**
+		 * Ask server to start sending incmming radio data to browser,
+		 * over websockets. And start listening to WebSockets.
+		 */
+		RED.comms.subscribe('tellstick-transmission', window.tellstick.inputConfigListener);
+
+
+	},
+	oneditcancel: function() {
+		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
+	},
+	oneditsave: function() {
+		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
+	},
+	ondelete: function() { // todo: remove this. ondelete will be deprecated in favor of oneditdelete. https://github.com/node-red/node-red/issues/561#issuecomment-74238250
+		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
+	},
+	oneditdelete: function() {
+		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
+	}
+});
+
+</script>

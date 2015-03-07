@@ -1,0 +1,11 @@
+<script type="text/x-red" data-template-name="tellstick-in">
+    @@include('tellstick-in/browser/_tellstick-in-browser.html')
+</script>
+
+<script type="text/x-red" data-help-name="tellstick-in">
+    @@include('tellstick-in/browser/_tellstick-in-browser-help-text.html')
+</script>
+
+<script type="text/javascript">
+    @@include('tellstick-in/browser/_tellstick-in-browser.js')
+</script>

@@ -1,0 +1,53 @@
+<script type="text/x-red" data-template-name="tellstick-in">
+    <div class="form-row">
+    <label for="node-input-inputconfig"><i class="fa fa-signal"></i> Input</label>
+    <input type="text" id="node-input-inputconfig">
+</div>
+<div class="form-row">
+    <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+    <input type="text" id="node-input-name" placeholder="Name">
+</div>
+
+</script>
+
+<script type="text/x-red" data-help-name="tellstick-in">
+    <p>Receive radio transmission from a Telldus Tellstick.</p>
+<p>See the <a href="https://github.com/emiloberg/node-red-contrib-tellstick" target="_blank">online documentation</a> for more help.</p>
+
+</script>
+
+<script type="text/javascript">
+    /*eslint-env browser, jquery */
+/*global RED */
+
+'use strict';
+
+RED.nodes.registerType('tellstick-in', {
+	category: 'input',
+	defaults: {
+		name: {value: ''},
+		inputconfig: {
+			type: 'tellstick-input',
+			required: true
+		}
+	},
+	color: '#abd3ff',
+	inputs: 0,
+	outputs: 1,
+	icon: 'tellstick-icon.png',
+	label: function() {
+
+		var inputconfigNodeLabel = '';
+		if (this.inputconfig) {
+			var inputconfigNode = RED.nodes.node(this.inputconfig);
+			inputconfigNodeLabel = inputconfigNode.label();
+		}
+
+		return this.name || inputconfigNodeLabel || 'tellstick in';
+	},
+	labelStyle: function() {
+		return this.name ? 'node_label_italic' : '';
+	}
+});
+
+</script>
