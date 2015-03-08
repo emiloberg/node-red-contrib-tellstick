@@ -190,6 +190,26 @@ Clicking "Configure" or "Add new device" will give you a dialog to add/configure
 
 [![Screenshot of input configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-update-device.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-update-device.png)
 
+## Advanced
+### Debounce/Throttle Data
+A radio transmitter will often send the same command multiple times in a short rapid burst to ensure that at least one of them is received. Most 433 Mhz transmitters send the same command 5-6 times.
+
+To make sure it only gets picked up once (even if all 6 of those transmissions makes it through to the Tellstick) we need "debounce" the data. If the same command gets received within a certain time frame, we treat it as one (1) command. By default this time is 500ms.
+
+When _transmitting_ data, the Tellstick behaves in the same way, it will send the same command about 6 times. However, this means that if we're sending two different commands, the Tellstick might start sending the second command before it's done with the first command. This makes only the first receiver pick up a clean signal and do what it's supposed to do (like turn on a lamp). The second receiver will get scrambled data and probably just ignore it. 
+
+To solve this we've to make sure the Tellstick is only sending one command at a time. The default time between 2 commands are 900ms (discovered by the nobel art of trial and error).
+
+Unlikely but if your input nodes are getting fired twice or if a second receiver aren't getting the signal (e.g. aren't turning on) you may tweak these times but editing the `settings.js` file in your Node-RED root directory.
+
+Add the `tellstickInputThrottle` and/or `tellstickOutputThrottle` property to the `functionGlobalContext` object like this:
+
+```
+functionGlobalContext: {
+	tellstickInputThrottle: 500,
+	tellstickOutputThrottle: 900
+}
+```
 
 ## About the Tellstick
 The Telldus Tellstick is a small USB connected radio tranciever which plays well on Windows/Mac/Linux (Raspberry) and is used to control a wide range of 433 MHz based plugged in and built in electric switches and dimmers. Further, this module can also listen to _incoming_ Telldus data (or in other words: it can pick up signals from remote controls).

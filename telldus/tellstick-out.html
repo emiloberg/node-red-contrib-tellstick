@@ -1115,7 +1115,7 @@ function updateDeviceSelect(brandName, selectedModel) {
 		jqSelectDevices.empty();
 		var html = '';
 		data.forEach(function (device) {
-			html =  '<option ';
+			html = '<option ';
 			if (device.model === selected.model) {
 				html += 'selected ';
 				selected.house = device.parameters.house;

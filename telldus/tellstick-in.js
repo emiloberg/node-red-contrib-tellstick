@@ -1,6 +1,15 @@
 	module.exports = function(RED) {
 	'use strict';
 
+	/**
+	 * If set: Read input throttle time from Node-RED settings
+	 * and update our settings with that value.
+	 */
+	var Settings = require('./lib/settings.js');
+	if (RED.settings.functionGlobalContext.hasOwnProperty('tellstickInputThrottle')) {
+		Settings.update('inputThrottle', RED.settings.functionGlobalContext.tellstickInputThrottle);
+	}
+
 	var tellstickEvents = require('./lib/tellstickEvents.js');
 	tellstickEvents.startEmittingData();
 

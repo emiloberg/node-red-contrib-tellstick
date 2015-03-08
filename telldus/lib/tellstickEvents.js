@@ -3,6 +3,7 @@
 
 var EventEmitter = require('events').EventEmitter;
 var telldus = require('telldus');
+var Settings = require('./settings.js');
 
 var isStarted = false;
 var events = new EventEmitter();
@@ -27,7 +28,7 @@ function startEmittingData() {
 			}
 			setTimeout(function (prop) {
 				delete debData[prop];
-			}, 500, data);
+			}, Settings.inputThrottle, data);
 		});
 	}
 }
