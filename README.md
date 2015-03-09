@@ -190,6 +190,22 @@ Clicking "Configure" or "Add new device" will give you a dialog to add/configure
 
 [![Screenshot of input configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-update-device.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-update-device.png)
 
+## Tips and tricks
+### Converting "on" to "dim to n"
+Sending the "turnon" command to a dim capable device will turn it on to the same dim level as you last set it to. If you have a regular on/off remote and want to convert a "turnon" command to a "dim to maximum" you can easily drop a function node between your Tellstick In node and your Tellstick Out node converting the message:
+
+```
+if (msg.method === 'turnon') {
+	msg.dimlevel = 255;
+	msg.method = 'dim'
+}
+
+return msg;
+```
+
+`dimlevel` goes from 0 to 255, so 255 will dim the device to 100%.
+
+
 ## Advanced
 ### Debounce/Throttle Data
 A radio transmitter will often send the same command multiple times in a short rapid burst to ensure that at least one of them is received. Most 433 Mhz transmitters send the same command 5-6 times.

@@ -1,6 +1,6 @@
 'use strict';
 
-
+var is = require('is_js');
 var telldus = require('telldus');
 var deviceTypes = require('./../resources/deviceTypesConfigurations.json');
 
@@ -65,26 +65,14 @@ function getParametersName(modelName) {
 	return ret;
 }
 
-function getDevice(deviceId) {
-
-	var out = {
-		id: deviceId,
-		methods: {},
-		model: '',
-		name: '',
-		protocol: '',
-		status: {},
-		type: ''
-	};
-
-	return out;
-}
-
 function getDevices(deviceId, cb) {
-	// todo validate deviceId
 	if(!cb) {
 		cb = deviceId;
 		deviceId = -1;
+	}
+
+	if(is.not.integer(deviceId)) {
+		throw new Error('deviceId must be an integer')
 	}
 
 	telldus.getDevices(function(err, data) {
@@ -188,7 +176,7 @@ function getParametersValues(deviceId, cb) {
 	});
 }
 
-module.exports.getDevice = getDevice;
+//module.exports.getDevice = getDevice;
 module.exports.getDevices = getDevices;
 module.exports.getBrands = getBrands;
 module.exports.getModels = getModels;

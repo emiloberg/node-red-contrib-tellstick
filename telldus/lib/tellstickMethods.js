@@ -7,7 +7,7 @@ var Settings = require('./settings.js');
 /**
  * Queue a command to be sent to the Tellstick.
  *
- * If two or more commands are sent to the Tellstick in a short
+ * If two or more commands are sent to the Tellstick  in a short
  * period of time (like within a few milliseconds), it will all
  * commands as fast as possible. This will pollute the air and
  * only the first receiver will pick up the signal.

@@ -1,17 +1,18 @@
 'use strict';
 
 var telldus = require('telldus');
+var is = require('is_js');
 
 /**
- * Check if str is number.
- * @param str
- * @returns {boolean}
+ * Normalize and validate an incoming command.
+ *
+ * Merge any properties coming in the incoming data object with the
+ * properties set as settings on the output node.
+ *
+ * @param incomingMsg
+ * @param node
+ * @returns deviceMethodObject
  */
-function isNumber(str) {
-	return (typeof str === 'number' && (str % 1) === 0);
-}
-
-
 function normalizeTellstickCommand(incomingMsg, node) {
 	/**
 	 * Merge incoming msg with config set on the node.
@@ -23,8 +24,6 @@ function normalizeTellstickCommand(incomingMsg, node) {
 		method: '',
 		dimlevel: ''
 	};
-
-
 	Object.keys(msg).forEach(function (key) {
 		if (typeof incomingMsg === 'object') {
 			if (incomingMsg.hasOwnProperty(key)) {
@@ -40,10 +39,10 @@ function normalizeTellstickCommand(incomingMsg, node) {
 			}
 		}
 	});
-
 	msg.err = false;
 	msg.warn = false;
 	msg.errWarnStr = '';
+
 
 	/**
 	 * We allow the incoming msg to be a little bit ambiguous,
@@ -72,15 +71,17 @@ function normalizeTellstickCommand(incomingMsg, node) {
 		msg.method = 0;
 	}
 
+
 	/**
 	 * Validate msg
 	 */
-	if (!isNumber(msg.device)) {
+	if (is.not.integer(msg.device)) {
 		msg.err = true;
 		msg.errWarnStr = "Value for 'device' is not a number. Please select a device in the output node, or send a device in the msg: 'msg: {device: 1}'";
 	}
+
 	if (msg.method === 2) {
-		if (isNumber(msg.dimlevel)) {
+		if (is.integer(msg.dimlevel)) {
 			if (msg.dimlevel < 0) {
 				msg.dimlevel = 0;
 				msg.warn = true;
@@ -103,7 +104,6 @@ function normalizeTellstickCommand(incomingMsg, node) {
 module.exports = function(RED) {
 	var tellstickDevices = require('./lib/tellstickDevices.js');
 	var tellstickMethods = require('./lib/tellstickMethods.js');
-
 
 	/**
 	 * If set: Read output throttle time from Node-RED settings
@@ -149,7 +149,6 @@ module.exports = function(RED) {
 
 			var msg = normalizeTellstickCommand(incomingMsg, node);
 
-			// todo - send error/warn message to the browser
 			if (msg.err === true) {
 				this.error(msg.errWarnStr);
 				return;
@@ -167,6 +166,38 @@ module.exports = function(RED) {
 	RED.nodes.registerType('tellstick-out', TellstickOutNode);
 
 
+
+	/**
+	 * Add new device
+	 */
+	function addUpdateDevice(updateDeviceId, deviceObj, cb) {
+		if (is.not.integer(updateDeviceId)) {
+			throw new Error('updateDeviceId must be a number');
+		}
+		var deviceId = updateDeviceId;
+		var doneStatus = 'updated';
+		if (updateDeviceId === -1) {
+			deviceId = telldus.addDeviceSync();
+			doneStatus = 'added';
+		}
+		if (is.under(deviceId, 1)) {
+			cb(new Error('Could not add device: ' + telldus.getErrorString(deviceId)));
+			return;
+		}
+		telldus.setName(deviceId, deviceObj.name, function () {
+			telldus.setProtocol(deviceId, deviceObj.protocol, function () {
+				telldus.setModel(deviceId, deviceObj.model, function() {
+					Object.keys(deviceObj.parameters).forEach(function (param) {
+						telldus.setDeviceParameterSync(deviceId, param, deviceObj.parameters[param]);
+					});
+					deviceObj.status = doneStatus;
+					cb(null, deviceObj);
+				});
+			});
+		});
+	}
+
+
 	/**
 	 * API: Give the client a list of all brands
 	 */
@@ -180,38 +211,11 @@ module.exports = function(RED) {
 	/**
 	 * API: Give the client a list of all device types for a given brand
 	 */
-	RED.httpAdmin.get('/tellstick/supported-devices/:id', function(req, res) {
+	RED.httpAdmin.get('/tellstick/supported-devices/:brand', function(req, res) {
 		res.writeHead(200, {'Content-Type': 'application/json'});
-		res.write(JSON.stringify(tellstickDevices.getModels(req.params.id)));
+		res.write(JSON.stringify(tellstickDevices.getModels(req.params.brand)));
 		res.end();
 	});
-
-
-	/**
-	 * Add new device
-	 */
-	function addUpdateDevice(updateDeviceId, deviceObj, cb) {
-		// todo: add error handling and validation.
-
-		var deviceId = updateDeviceId;
-		var doneStatus = 'updated';
-		if (updateDeviceId === -1) {
-			deviceId = telldus.addDeviceSync();
-			doneStatus = 'added';
-		}
-
-		telldus.setName(deviceId, deviceObj.name, function () {
-			telldus.setProtocol(deviceId, deviceObj.protocol, function () {
-				telldus.setModel(deviceId, deviceObj.model, function() {
-					Object.keys(deviceObj.parameters).forEach(function (param) {
-						telldus.setDeviceParameterSync(deviceId, param, deviceObj.parameters[param]);
-					});
-					deviceObj.status = doneStatus;
-					cb(deviceObj);
-				});
-			});
-		});
-	}
 
 
 	/**
@@ -220,18 +224,23 @@ module.exports = function(RED) {
 	RED.httpAdmin.post('/tellstick/device', function(req, res) {
 
 		var updateDeviceId = parseInt(req.body.id);
-		if (!isNumber(updateDeviceId)) {
+		if (is.not.integer(updateDeviceId)) {
 			updateDeviceId = -1;
 		}
 
-		addUpdateDevice(updateDeviceId, req.body, function (status) {
+		addUpdateDevice(updateDeviceId, req.body, function (err, data) {
+			if (err) {
+				res.writeHead(500, {'Content-Type': 'application/json'});
+				res.write(JSON.stringify(err.message));
+				res.end();
+				return;
+			}
 			res.writeHead(200, {'Content-Type': 'application/json'});
-			res.write(JSON.stringify(status));
+			res.write(JSON.stringify(data));
 			res.end();
 		});
 
 	});
-
 
 
 	/**
@@ -278,7 +287,7 @@ module.exports = function(RED) {
 
 		var deviceId = parseInt(req.params.deviceid);
 
-		if (!isNumber(deviceId)) {
+		if (is.not.integer(deviceId)) {
 			res.writeHead(400, {'Content-Type': 'application/json'});
 			res.write(JSON.stringify({
 				errStr: 'Device needs to be a number'
@@ -335,8 +344,8 @@ module.exports = function(RED) {
 	RED.httpAdmin.delete('/tellstick/device/:id', function(req, res) {
 		var deviceId = parseInt(req.params.id);
 
-		if (!isNumber(deviceId)) {
-			res.writeHead(404, {'Content-Type': 'application/json'});
+		if (is.not.integer(deviceId)) {
+			res.writeHead(400, {'Content-Type': 'application/json'});
 			res.write(JSON.stringify({
 				errStr: 'deviceId needs to be a number'
 			}));

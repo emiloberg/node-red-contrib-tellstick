@@ -28,7 +28,7 @@ function startEmittingData() {
 			}
 			setTimeout(function (prop) {
 				delete debData[prop];
-			}, Settings.inputThrottle, data);
+			}, Settings.get('inputThrottle'), data);
 		});
 	}
 }

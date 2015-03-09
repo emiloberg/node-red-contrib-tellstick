@@ -207,7 +207,9 @@
 
 'use strict';
 
-// Todo, check all jQuery selectors, they will catch _ALL_ nodes, not just this one.
+/**
+ * Register Node
+ */
 RED.nodes.registerType('tellstick-input', {
 	category: 'config',
 	defaults: {
@@ -245,7 +247,7 @@ RED.nodes.registerType('tellstick-input', {
 		 * but we need a bigger window to play with.
 		 */
 		setTimeout(function () {
-			var jqCurDialog = $("[aria-describedby='node-config-dialog']");
+			var jqCurDialog = $("[aria-describedby='node-config-dialog']:visible");
 			var dialogWidth = ($(window).width() - 100);
 			if (dialogWidth > 1400) {
 				dialogWidth = 1400;
@@ -288,7 +290,7 @@ RED.nodes.registerType('tellstick-input', {
 		 * Move command/sensor data from table to input fields
 		 * when user clicks on "Learn" button.
 		 */
-		$('body').on('click', '.learn-button', function() {
+		$('body').on('click', '.telldus-learn-button', function() {
 			// Empty any previous values
 			$('.device-property').val('');
 
@@ -328,7 +330,7 @@ RED.nodes.registerType('tellstick-input', {
 
 			var html = '<tr class="method-' + data.method + '">' +
 				'<td class="first">' +
-				'<button data-data="' + rawdata + '" type="button" id="" class="learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
+				'<button data-data="' + rawdata + '" type="button" id="" class="telldus-learn-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" role="button" aria-disabled="false">' +
 				'<span class="ui-button-text">Learn</span>' +
 				'</button>' +
 				'</td>' +
@@ -380,9 +382,6 @@ RED.nodes.registerType('tellstick-input', {
 		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
 	},
 	oneditsave: function() {
-		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
-	},
-	ondelete: function() { // todo: remove this. ondelete will be deprecated in favor of oneditdelete. https://github.com/node-red/node-red/issues/561#issuecomment-74238250
 		RED.comms.unsubscribe('tellstick-transmission', window.tellstick.inputConfigListener);
 	},
 	oneditdelete: function() {
