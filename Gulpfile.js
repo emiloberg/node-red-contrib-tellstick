@@ -11,7 +11,7 @@ var watch = require('gulp-watch');
 var runSequence = require('run-sequence');
 
 gulp.task('lint', function () {
-    return gulp.src(['telldus/lib/*.js', 'lib/**/*.js'])
+    return gulp.src(['tellstick/lib/*.js', 'lib/**/*.js'])
         .pipe(debug())
         .pipe(eslint())
         .pipe(eslint.format())
@@ -28,7 +28,7 @@ gulp.task('build', function() {
 		.pipe(rename(function (path) {
 			path.extname = '.js';
 		}))
-		.pipe(gulp.dest('./telldus/'));
+		.pipe(gulp.dest('./tellstick/'));
 
 	gulp.src(['lib/*.html-template'])
 		.pipe(fileinclude({
@@ -38,7 +38,7 @@ gulp.task('build', function() {
 		.pipe(rename(function (path) {
 			path.extname = '.html';
 		}))
-		.pipe(gulp.dest('./telldus/'));
+		.pipe(gulp.dest('./tellstick/'));
 });
 
 gulp.task('watch-files', function() {

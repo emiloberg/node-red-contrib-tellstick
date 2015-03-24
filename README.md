@@ -214,7 +214,7 @@ To make sure it only gets picked up once (even if all 6 of those transmissions m
 
 When _transmitting_ data, the Tellstick behaves in the same way, it will send the same command about 6 times. However, this means that if we're sending two different commands, the Tellstick might start sending the second command before it's done with the first command. This makes only the first receiver pick up a clean signal and do what it's supposed to do (like turn on a lamp). The second receiver will get scrambled data and probably just ignore it. 
 
-To solve this we've to make sure the Tellstick is only sending one command at a time. The default time between 2 commands are 900ms (discovered by the nobel art of trial and error).
+To solve this we've to make sure the Tellstick is only sending one command at a time. The default time between 2 commands is 900ms (discovered by the nobel art of trial and error).
 
 Unlikely but if your input nodes are getting fired twice or if a second receiver aren't getting the signal (e.g. aren't turning on) you may tweak these times but editing the `settings.js` file in your Node-RED root directory.
 
