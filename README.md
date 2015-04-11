@@ -1,6 +1,6 @@
-# node-red-contrib-telldus
+# node-red-contrib-tellstick
 
-# Module is a work in progress!
+# Module is a work in progress! Soon to be published on NPM
 
 This is a full featured [Node-RED](http://nodered.org/) module to communicate with a [Tellstick](http://www.telldus.se/products/tellstick), [Tellstick Duo](http://www.telldus.se/products/tellstick_duo), and [Tellstick Net](http://www.telldus.se/products/tellstick_net)
 
@@ -11,19 +11,19 @@ This is a full featured [Node-RED](http://nodered.org/) module to communicate wi
 ## Status
 What? | Status | What? | Status
 ------- | ------ | ------- | ------
-Code Climate GPA | [![Code Climate](https://codeclimate.com/github/emiloberg/node-red-contrib-telldus/badges/gpa.svg)](https://codeclimate.com/github/emiloberg/node-red-contrib-telldus) | Licence | [![Licence](https://img.shields.io/npm/l/node-red-contrib-telldus.svg)](https://github.com/emiloberg/node-red-contrib-telldus/blob/master/LICENSE)
-Codacy | [![Codacy Badge](https://www.codacy.com/project/badge/b2291afcead447048742a9cef0cdd347)](https://www.codacy.com/public/emiloberg/node-red-contrib-telldus) | Tag |  [![Tag](https://img.shields.io/github/tag/emiloberg/node-red-contrib-telldus.svg)](https://github.com/emiloberg/node-red-contrib-telldus/tags)
-Issues | [![Issues](https://img.shields.io/github/issues/emiloberg/node-red-contrib-telldus.svg)](https://github.com/emiloberg/node-red-contrib-telldus/issues) | GitHub Forks | [![Forks](https://img.shields.io/github/forks/emiloberg/node-red-contrib-telldus.svg)](https://github.com/emiloberg/node-red-contrib-telldus/network)
-GitHub Version | [![GitHub version](https://badge.fury.io/gh/emiloberg%2Fnode-red-contrib-telldus.svg)](http://badge.fury.io/gh/emiloberg%2Fnode-red-contrib-telldus) | GitHub Followers | [![Followers](https://img.shields.io/github/followers/emiloberg.svg)](https://github.com/emiloberg/followers)
-NPM Version | [![npm version](https://badge.fury.io/js/node-red-contrib-telldus.svg)](http://badge.fury.io/js/node-red-contrib-telldus) | Dependencies | ![Dependencies](https://david-dm.org/emiloberg/node-red-contrib-telldus.svg)
+Codacy | [![Codacy Badge](https://www.codacy.com/project/badge/b2291afcead447048742a9cef0cdd347)](https://www.codacy.com/public/emiloberg/node-red-contrib-tellstick) | Licence | [![Licence](https://img.shields.io/npm/l/node-red-contrib-tellstick.svg)](https://github.com/emiloberg/node-red-contrib-tellstick/blob/master/LICENSE)
+Issues | [![Issues](https://img.shields.io/github/issues/emiloberg/node-red-contrib-tellstick.svg)](https://github.com/emiloberg/node-red-contrib-tellstick/issues) | Tag |  [![Tag](https://img.shields.io/github/tag/emiloberg/node-red-contrib-tellstick.svg)](https://github.com/emiloberg/node-red-contrib-tellstick/tags)
+GitHub Version | [![GitHub version](https://badge.fury.io/gh/emiloberg%2Fnode-red-contrib-tellstick.svg)](http://badge.fury.io/gh/emiloberg%2Fnode-red-contrib-tellstick) | GitHub Forks | [![Forks](https://img.shields.io/github/forks/emiloberg/node-red-contrib-tellstick.svg)](https://github.com/emiloberg/node-red-contrib-tellstick/network)
+NPM Version | [![npm version](https://badge.fury.io/js/node-red-contrib-tellstick.svg)](http://badge.fury.io/js/node-red-contrib-tellstick) | GitHub Followers | [![Followers](https://img.shields.io/github/followers/emiloberg.svg)](https://github.com/emiloberg/followers)
+Dependencies | ![Dependencies](https://david-dm.org/emiloberg/node-red-contrib-tellstick.svg)
 
 ## Issues
-This is still getting developed. Feel free to [add issues, questions or feature requests](https://github.com/emiloberg/node-red-contrib-telldus/issues).
+This is still getting developed. Feel free to [add issues, questions or feature requests](https://github.com/emiloberg/node-red-contrib-tellstick/issues).
 
 ## Example flow
-Light blue nodes are telldus nodes.
+Light blue nodes are tellstick nodes.
 
-[![Screenshot - Sample Flows](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-sample-flows.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-sample-flows.png)
+[![Screenshot - Sample Flows](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-sample-flows.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-sample-flows.png)
 
 ## Installation
 
@@ -33,6 +33,7 @@ Light blue nodes are telldus nodes.
 Make sure you have Telldus Center installed. If you own a Telldus, you probably have this already. If not, [download and install from the Telldus webpage](http://download.telldus.se/TellStick/Software/TelldusCenter/). That's it, go to step 2 below.
 
 #### Ubuntu/Debian/Raspbian (Raspberry Pi)
+**Note:** If you previously have installed drivers for the Tellstick, there's a possibility that you've installed `telldus-core` but are missing the `libtelldus-core-dev` which is needed for this module to work on Ubuntu/Debian/Raspbian.
 
 ```
 #
@@ -64,12 +65,12 @@ Install from source by following this [excellent guide from Lasse](https://lasse
 
 ### 2. Install module(s)
 
-For some reason, the underlying telldus library does not have node-gyp as a dependency (even though it actually needs it). Therefor install it by running this 3 commands in sequence. First `cd` to your Node-RED root directory.
+For some reason, the underlying telldus library does not have node-gyp as a dependency (even though it actually needs it). Therefor install by `cd`-ing to your Node-RED root directory and run these 3 commands in sequence.
 
 ```
 npm install node-gyp
 npm install telldus
-npm install node-red-contrib-telldus
+npm install node-red-contrib-tellstick
 ```
 
 
@@ -82,11 +83,11 @@ This module will listen to all incoming data and if that data matches the rule s
 
 E.g. you can set an input node to listen to all remote which sends `house`=_15414550_ and `group`=0. This will fire the node on all button press' on that remote control. If you want to qualify it you may adda a `unit`=10 to the rule which will make it only fire on button _10_. Or qualify it even more by adding the rule `method`=turnoff to only make it trigger on the _off_ button (and not the _on_ button).
 
-You can easily make your rules by placing a Telldus in node on your Sheet, clicking it and select "Add new telldus-input". A dialog will open which will show _all_ incoming data. Just press a button on the remote (or wait for your sensor to transmit a signal) and it will show up on the dialog. From there you may can the _learn_ button which will populate the rule fields.
+You can easily make your rules by placing a Tellstick in node on your Sheet, clicking it and select "Add new tellstick-input". A dialog will open which will show _all_ incoming data. Just press a button on the remote (or wait for your sensor to transmit a signal) and it will show up on the dialog. From there you may can the _learn_ button which will populate the rule fields.
 
 If you want to create an In node which passes on _all_ incoming data, just create a config with all fields left blank (meaning: no rules).
 
-[![Screenshot of input configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-in-config.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-in-config.png)
+[![Screenshot of input configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-in-config.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-in-config.png)
 
 If a in node is triggered, it will output the complete data message from the transmitter. Check the message out by wiring the input node to a debug node (set to display _full message_).
 
@@ -147,7 +148,7 @@ The out node will send a signal telling your heater to turn off or your lamp to 
 
 Example of an out node, dimming the device "Red lightsaber" to 165 (65%):
 
-[![Screenshot of output configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-out.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-out.png)
+[![Screenshot of output configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-out.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-out.png)
 
 ### Passing data to the out node.
 
@@ -180,15 +181,15 @@ msg: {
 
 ### Configure devices
 
-The way the Tellstick works you have to configure your devices. On Windows and Mac OS X you do this in Telldus Center, on Linux you do this in `/etc/tellstick.conf`. However, this is a full featured module to handle Telldus devices and you may add/update/delete devices straight from Node-RED with this module. Any changes you do from Node-RED will be saved (e.g. written to `/etc/tellstick.conf`).
+The way the Tellstick works you have to configure your devices. On Windows and Mac OS X you do this in Telldus Center, on Linux you do this in `/etc/tellstick.conf`. However, this is a full featured module to handle Tellstick devices and you may add/update/delete devices straight from Node-RED with this module. Any changes you do from Node-RED will be saved (e.g. written to `/etc/tellstick.conf`).
 
 To configure devices. Place an Out node on a Sheet, click it and click the big blue "Configure/Add devices". A new dialog will open showing all configured devices. From here you can also test your devices but turning them on/off or dimming them. Or you may send the "learn" command to them.
 
-[![Screenshot of device list](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-devicelist.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-devicelist.png)
+[![Screenshot of device list](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-devicelist.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-devicelist.png)
 
 Clicking "Configure" or "Add new device" will give you a dialog to add/configure/remove a device.
 
-[![Screenshot of input configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-update-device.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-telldus/master/docs/screenshot-update-device.png)
+[![Screenshot of input configuration](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-update-device.png)](https://raw.githubusercontent.com/emiloberg/node-red-contrib-tellstick/master/docs/screenshot-update-device.png)
 
 ## Tips and tricks
 ### Converting "on" to "dim to n"
@@ -228,7 +229,7 @@ functionGlobalContext: {
 ```
 
 ## About the Tellstick
-The Telldus Tellstick is a small USB connected radio tranciever which plays well on Windows/Mac/Linux (Raspberry) and is used to control a wide range of 433 MHz based plugged in and built in electric switches and dimmers. Further, this module can also listen to _incoming_ Telldus data (or in other words: it can pick up signals from remote controls).
+The Telldus Tellstick is a small USB connected radio tranciever which plays well on Windows/Mac/Linux (Raspberry) and is used to control a wide range of 433 MHz based plugged in and built in electric switches and dimmers. Further, this module can also listen to _incoming_ Tellstick data (or in other words: it can pick up signals from remote controls).
 
 #### Commonly used Tellstick transmitters/receivers 
 * [HomeEasy](http://www.homeeasy.eu/)
@@ -246,6 +247,6 @@ See [complete list of supported devices](http://telldus.se/products/compability)
 ## Developing
 This modules is quite big and to make it easier to handle, the source code is is broken down into smaller files.
 
-As per Node-RED standard, each module consist of 1 html file and 1 js file. These files lives in the `/telldus` folder and **gets built** from the `/lib` folder. This is, somewhat incorrectly, named _lib_ because it's a reserved word in the Node-RED world and Node-RED will not try to discover nodes in folders named _lib_. The more correct folder name would be _source_.
+As per Node-RED standard, each module consist of 1 html file and 1 js file. These files lives in the `/tellstick` folder and **gets built** from the `/lib` folder. This is, somewhat incorrectly, named _lib_ because it's a reserved word in the Node-RED world and Node-RED will not try to discover nodes in folders named _lib_. The more correct folder name would be _source_.
 
 A Gulp build script is included. Run `gulp build` to build the html/js files. Run `gulp` to start gulp in developer mode and auto-build the files when the source files (in `/lib`) are changed.
