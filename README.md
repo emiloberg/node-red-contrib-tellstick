@@ -61,7 +61,7 @@ sudo apt-get install telldus-core libtelldus-core-dev
 
 #### Other Linux
 
-Install from source by following this [excellent guide from Lasse](https://lassesunix.wordpress.com/).
+Install from source by following this [excellent guide from Lasse](https://lassesunix.wordpress.com/2013/08/12/installing-telldus-core-on-raspberry-pi/).
 
 ### 2. Install module(s)
 
