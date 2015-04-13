@@ -1,10 +1,23 @@
 # node-red-contrib-tellstick
 
-This is a full featured [Node-RED](http://nodered.org/) module to communicate with a [Tellstick](http://www.telldus.se/products/tellstick), [Tellstick Duo](http://www.telldus.se/products/tellstick_duo), and [Tellstick Net](http://www.telldus.se/products/tellstick_net)
+This is a full featured [Node-RED](http://nodered.org/) module to communicate with a [Tellstick](http://www.telldus.se/products/tellstick) or [Tellstick Duo](http://www.telldus.se/products/tellstick_duo).
 
-* Send data to a Tellstick (e.g. turning a lamp on).
-* Recieve data from a (Tellstick compatible) transmitter (e.g a remote control or a temperature sensor).
+* Send data to a Tellstick, e.g. turning a lamp on (Available on both Tellstick and Tellstick Duo).
+* Recieve data from a (Tellstick compatible) transmitter, e.g a remote control or a temperature sensor (Only available on Tellstick Duo).
 * Manage devices (e.g. add and "teach" a new wall plug)
+
+## Table of content
+* [#status](Status)
+* [#issues](Issues)
+* [#looking-for-older-module](Looking for older module?)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#example-flow](Example flow)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#installation](Installation)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#usage-in-node](Usage, In node)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#usage-out-node](Usage, Out node)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#tips-and-tricks](Tips and tricks)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#advanced](Advanced)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#about-the-tellstick](About the Tellstick)
+* [https://www.npmjs.com/package/node-red-contrib-tellstick#developing](Developing)
 
 ## Status
 What? | Status | What? | Status
@@ -233,6 +246,12 @@ functionGlobalContext: {
 
 ## About the Tellstick
 The Telldus Tellstick is a small USB connected radio tranciever which plays well on Windows/Mac/Linux (Raspberry) and is used to control a wide range of 433 MHz based plugged in and built in electric switches and dimmers. Further, this module can also listen to _incoming_ Tellstick data (or in other words: it can pick up signals from remote controls).
+
+There are 3 different types of Tellsticks:
+
+* [Tellstick](http://www.telldus.se/products/tellstick) - The simplest device. This device can only transmit radio (meaning you may turn on a lamp from Node-RED)
+* [Tellstick Duo](http://www.telldus.se/products/tellstick_duo) - Transmitter and receiver. This is most probably the one you want. With this you can transmit radio as well as receive (meaning Node-RED may listen and act on incoming radio, e.g. from a sensor or remote control)
+* [Tellstick Net](http://www.telldus.se/products/tellstick_net) -  This node does _not_ support this device. Ethernet device. It's more or less an all-in-one solution with its own software.
 
 #### Commonly used Tellstick transmitters/receivers 
 * [HomeEasy](http://www.homeeasy.eu/)
