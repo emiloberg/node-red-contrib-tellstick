@@ -1,10 +1,10 @@
 {
   "name": "node-red-contrib-tellstick",
   "version": "0.0.1",
-  "description": "Send/receive data to/from a Tellstick. Switch light off/on, listen to sensors.",
+  "description": "Send/receive data to/from a Tellstick. Switch light off/on, listen to remotes/sensors.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/emiloberg/node-red-contrib-telldus.git"
+    "url": "https://github.com/emiloberg/node-red-contrib-tellstick.git"
   },
   "keywords": [
     "node-red",
@@ -26,9 +26,9 @@
   "author": "Emil Oberg",
   "license": "Apache",
   "bugs": {
-    "url": "https://github.com/emiloberg/node-red-contrib-telldus/issues"
+    "url": "https://github.com/emiloberg/node-red-contrib-tellstick/issues"
   },
-  "homepage": "https://github.com/emiloberg/node-red-contrib-telldus",
+  "homepage": "https://github.com/emiloberg/node-red-contrib-tellstick",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-debug": "^2.0.0",
