@@ -68,7 +68,7 @@ Install from source by following this [excellent guide from Lasse](https://lasse
 
 ### 2. Install module(s)
 
-For some reason, the underlying telldus library does not have node-gyp as a dependency (even though it actually needs it). Therefor install by `cd`-ing to your Node-RED root directory and run these 3 commands in sequence.
+For some reason, the underlying telldus library does not have node-gyp as a dependency (even though it actually needs it). Therefor install by `cd`-ing to your Node-RED directory (`$HOME/.node-red`) and run these 3 commands in sequence.
 
 ```
 npm install node-gyp
@@ -220,7 +220,7 @@ When _transmitting_ data, the Tellstick behaves in the same way, it will send th
 
 To solve this we've to make sure the Tellstick is only sending one command at a time. The default time between 2 commands is 900ms (discovered by the nobel art of trial and error).
 
-Unlikely but if your input nodes are getting fired twice or if a second receiver aren't getting the signal (e.g. aren't turning on) you may tweak these times but editing the `settings.js` file in your Node-RED root directory.
+Unlikely but if your input nodes are getting fired twice or if a second receiver aren't getting the signal (e.g. aren't turning on) you may tweak these times but editing the `settings.js` file in your Node-RED directory.
 
 Add the `tellstickInputThrottle` and/or `tellstickOutputThrottle` property to the `functionGlobalContext` object like this:
 
