@@ -7,17 +7,17 @@ This is a full featured [Node-RED](http://nodered.org/) module to communicate wi
 * Manage devices (e.g. add and "teach" a new wall plug)
 
 ## Table of content
-* [#status](Status)
-* [#issues](Issues)
-* [#looking-for-older-module](Looking for older module?)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#example-flow](Example flow)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#installation](Installation)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#usage-in-node](Usage, In node)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#usage-out-node](Usage, Out node)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#tips-and-tricks](Tips and tricks)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#advanced](Advanced)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#about-the-tellstick](About the Tellstick)
-* [https://www.npmjs.com/package/node-red-contrib-tellstick#developing](Developing)
+* [Status](#status)
+* [Issues](#issues)
+* [Looking for older module?](#looking-for-older-module)
+* [Example flow](#example-flow)
+* [Installation](#installation)
+* [Usage, In node](#usage-in-node)
+* [Usage, Out node](#usage-out-node)
+* [Tips and tricks](#tips-and-tricks)
+* [Advanced](#advanced)
+* [About the Tellstick](#about-the-tellstick)
+* [Developing](#developing)
 
 ## Status
 What? | Status | What? | Status
