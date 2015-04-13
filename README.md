@@ -6,7 +6,7 @@ This is a full featured [Node-RED](http://nodered.org/) module to communicate wi
 * Recieve data from a (Tellstick compatible) transmitter, e.g a remote control or a temperature sensor (Only available on Tellstick Duo).
 * Manage devices (e.g. add and "teach" a new wall plug)
 
-## Table of content
+## Table of contents
 * [Status](#status)
 * [Issues](#issues)
 * [Looking for older module?](#looking-for-older-module)
