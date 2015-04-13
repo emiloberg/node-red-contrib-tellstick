@@ -1,7 +1,5 @@
 # node-red-contrib-tellstick
 
-# Module is a work in progress! Soon to be published on NPM
-
 This is a full featured [Node-RED](http://nodered.org/) module to communicate with a [Tellstick](http://www.telldus.se/products/tellstick), [Tellstick Duo](http://www.telldus.se/products/tellstick_duo), and [Tellstick Net](http://www.telldus.se/products/tellstick_net)
 
 * Send data to a Tellstick (e.g. turning a lamp on).
@@ -19,6 +17,11 @@ Dependencies | ![Dependencies](https://david-dm.org/emiloberg/node-red-contrib-t
 
 ## Issues
 This is still getting developed. Feel free to [add issues, questions or feature requests](https://github.com/emiloberg/node-red-contrib-tellstick/issues).
+
+## Looking for older module?
+The NPM namespace `node-red-contrib-tellstick` previously (up until 13 april 2015) held a completely different, simple, module which supported receiving data from Tellstick Duo.
+
+[@japikas](https://github.com/japikas) gracefully transferred ownership of the namespace to this module (which also supports receiving data, plus much more). Are you looking for the old module? Please find it at [https://github.com/japikas/node-red-contrib-tellstick](https://github.com/japikas/node-red-contrib-tellstick). 
 
 ## Example flow
 Light blue nodes are tellstick nodes.

@@ -1,1 +1,20 @@
-<p>Telldus OUT</p>
+<p>Send data to Telldus Tellstick.</p>
+
+<p>
+    There are 3 ways of passing data to an out node:
+</p>
+
+<ul>
+    <li>Configure the device, method (turn on/turn off/dim) and dimlevel (0-255) if a dim capable device on the output node itself.</li>
+    <li>Send the data in the msg sent to the out node.
+        <code>msg</code> object sent into this node may contain:
+        <ul>
+            <li><code>device</code>, integer, device ID.</li>
+            <li><code>method</code>, string, one of: turnoff, turnon, dim, bell, learn</li>
+            <li><code>dimlevel</code>: integer 0-255, if method is set to dim. 255 is 100% and 0 is off.</li>
+        </ul>
+    </li>
+    <li>A combination of above. E.g set the device to Red lightsaber in the configuration dialog but send method: turnon or method: turnoff in the msg to the out node. Whatever is sent in the msg will always override the settings set in the node.</li>
+</ul>
+
+<p>See the <a href="https://github.com/emiloberg/node-red-contrib-tellstick#usage-out-node" target="_blank">online documentation</a> for more help.</p>
