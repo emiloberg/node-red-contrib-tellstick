@@ -43,6 +43,17 @@ Light blue nodes are tellstick nodes.
 
 ## Installation
 
+### 0. Node version
+A dependecy of this module, the [node-telldus](https://github.com/Hexagon/node-telldus) module is currently not working on Node 0.12. Therefor, **make sure you're running Node 0.10**.
+
+Get your current Node version by running:
+
+```
+node -v
+```
+
+This flaw can be [followed in this issue](https://github.com/emiloberg/node-red-contrib-tellstick/issues/5).
+
 ### 1. Install telldus-core and development libraries
 
 #### Windows and Mac OS X
