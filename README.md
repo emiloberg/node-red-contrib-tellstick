@@ -236,7 +236,7 @@ return msg;
 
 ## Advanced
 
-### Possible breaking changes
+### Sending same command multiple times
 
 The _tellstick-out_ node sends the same command multiple times to ensure that at least one of them reaches the receiver.
 
