@@ -55,6 +55,9 @@ function queue(msg, cb) {
  * @param cb Optional callback
  */
 function _invokeTellstickMethod(msg, cb) {
+
+	if (typeof cb !== 'function') { cb = function(){}; }
+
 	if (msg.method === 0) {
 		telldus.turnOff(msg.device, function(err) {
 			if (err) {

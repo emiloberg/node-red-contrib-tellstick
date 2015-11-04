@@ -3,7 +3,9 @@
 
 var Settings = {
 	outputThrottle: 900,
-	inputThrottle: 500
+	inputThrottle: 500,
+	repeatSendTimes: 5,
+	repeatSendInterval: 500
 };
 
 function get(setting) {

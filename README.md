@@ -235,6 +235,34 @@ return msg;
 
 
 ## Advanced
+
+### Possible breaking changes
+
+The _tellstick-out_ node sends the same command multiple times to ensure that at least one of them reaches the receiver.
+
+As the Tellstick just sends radio signals without any way of knowing if the transmission reched its goal, sometimes signals gets lost in space.
+
+To mitigate this. The _tellstick-out_ sends the same command multiple times.
+
+By default, it sends the same command 5 times with an interval of 500 milliseconds (0.5 seconds) between each command. You can tweak these settings but editing the `settings.js` file in your Node-RED directory (the path to the settings file is printed in the console when you're starting Node-RED).
+
+The new settings are:
+
+```
+functionGlobalContext: {
+	repeatSendTimes: 5,
+	repeatSendInterval: 500
+}
+```
+
+#### Possible caveat
+
+Imagine that you have a flow that will turn on a lamp (command A) and directly thereafter turn off that lamp (command B). 
+
+Then the command A will turn the lamp on, then command B will turn the lamp off. Then the command A will emit it's second signal, turning the lamp on again. Command B will emit it's second signal, turning the lamp on - and so on. 
+
+If you have a flow as such, then set `repeatSendTimes` to `1`. However, this should really be a corner case. 
+
 ### Debounce/Throttle Data
 A radio transmitter will often send the same command multiple times in a short rapid burst to ensure that at least one of them is received. Most 433 Mhz transmitters send the same command 5-6 times.
 

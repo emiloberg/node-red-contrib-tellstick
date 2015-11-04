@@ -2,6 +2,7 @@
 
 var telldus = require('telldus');
 var is = require('is_js');
+var Settings = require('./lib/settings.js');
 
 /**
  * Normalize and validate an incoming command.
@@ -109,9 +110,14 @@ module.exports = function(RED) {
 	 * If set: Read output throttle time from Node-RED settings
 	 * and update our settings with that value.
 	 */
-	var Settings = require('./lib/settings.js');
 	if (RED.settings.functionGlobalContext.hasOwnProperty('tellstickOutputThrottle')) {
 		Settings.update('outputThrottle', RED.settings.functionGlobalContext.tellstickOutputThrottle);
+	}
+	if (RED.settings.functionGlobalContext.hasOwnProperty('repeatSendTimes')) {
+		Settings.update('repeatSendTimes', RED.settings.functionGlobalContext.repeatSendTimes);
+	}
+	if (RED.settings.functionGlobalContext.hasOwnProperty('repeatSendInterval')) {
+		Settings.update('repeatSendInterval', RED.settings.functionGlobalContext.repeatSendInterval);
 	}
 
 	/**
@@ -156,11 +162,20 @@ module.exports = function(RED) {
 				this.warn(msg.errWarnStr);
 			}
 
-			tellstickMethods.queue(msg, function(err) {
-				if (err) {
-					node.error(JSON.stringify(err.message));
+			for (var i = 0; i < Settings.get('repeatSendTimes'); i++) {
+				if (i === 0) {
+					tellstickMethods.queue(msg, function (err) {
+						if (err) {
+							node.error(JSON.stringify(err.message));
+						}
+					});
+				} else {
+					setTimeout(function () {
+						tellstickMethods.queue(msg);
+					}, i * Settings.get('repeatSendInterval'));
 				}
-			});
+			}
+
 		});
 	}
 	RED.nodes.registerType('tellstick-out', TellstickOutNode);
@@ -263,20 +278,29 @@ module.exports = function(RED) {
 			return;
 		}
 
-		tellstickMethods.queue(out, function(err, status) {
-			if (err) {
-				res.writeHead(500, {'Content-Type': 'application/json'});
-				out.err = true;
-				out.errWarnStr = err.message;
-				res.write(JSON.stringify(out));
-				res.end();
+		for (var i = 0; i < Settings.get('repeatSendTimes'); i++) {
+			if (i === 0) {
+				tellstickMethods.queue(out, function(err, status) {
+					if (err) {
+						res.writeHead(500, {'Content-Type': 'application/json'});
+						out.err = true;
+						out.errWarnStr = err.message;
+						res.write(JSON.stringify(out));
+						res.end();
+					} else {
+						out.status = status;
+						res.writeHead(200, {'Content-Type': 'application/json'});
+						res.write(JSON.stringify(out));
+						res.end();
+					}
+				});
 			} else {
-				out.status = status;
-				res.writeHead(200, {'Content-Type': 'application/json'});
-				res.write(JSON.stringify(out));
-				res.end();
+				setTimeout(function() {
+					tellstickMethods.queue(out);
+				}, i * Settings.get('repeatSendInterval'));
 			}
-		});
+		}
+
 	});
 
 
