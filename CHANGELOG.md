@@ -1,5 +1,13 @@
 # node-red-contrib-tellstick changelog
 
+## 2.1.1
+
+Fixed missing changelog
+
+## 2.1.0
+
+Added support for Node 0.12+
+
 ## 2.0.0
 
 ### Possible breaking changes
