@@ -44,15 +44,11 @@ Light blue nodes are tellstick nodes.
 ## Installation
 
 ### 0. Node version
-A dependecy of this module, the [node-telldus](https://github.com/Hexagon/node-telldus) module is currently not working on Node 0.12. Therefor, **make sure you're running Node 0.10**.
-
-Get your current Node version by running:
+Find out if you're running Node 0.10/0.11 or a newer version. Get your current Node version by running:
 
 ```
 node -v
 ```
-
-This flaw can be [followed in this issue](https://github.com/emiloberg/node-red-contrib-tellstick/issues/5).
 
 ### 1. Install telldus-core and development libraries
 
@@ -94,9 +90,28 @@ Install from source by following this [excellent guide from Lasse](https://lasse
 
 For some reason, the underlying telldus library does not have node-gyp as a dependency (even though it actually needs it). Therefor install by `cd`-ing to your Node-RED directory (`$HOME/.node-red`) and run these 3 commands in sequence.
 
+#### 1)
 ```
 npm install node-gyp
+```
+
+#### 2)
+**Run one of these commands:**
+
+If you're running Node 0.12 or above, run:
+
+```
 npm install telldus
+```
+
+or, if you're running a legacy version of Node (0.10/0.11), run:
+
+```
+npm install telldus-legacy
+```
+
+#### 3)
+```
 npm install node-red-contrib-tellstick
 ```
 
