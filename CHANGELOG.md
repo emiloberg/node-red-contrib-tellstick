@@ -1,5 +1,9 @@
 # node-red-contrib-tellstick changelog
 
+## 2.1.2
+
+Bumped [telldus](https://github.com/Hexagon/node-telldus) dependency to 1.0.0
+
 ## 2.1.1
 
 Fixed missing changelog
