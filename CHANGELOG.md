@@ -1,5 +1,8 @@
 # node-red-contrib-tellstick changelog
 
+## 2.1.3
+Fixed [dependency warning](https://github.com/emiloberg/node-red-contrib-tellstick/issues/8). Thanks [Hexagon](https://github.com/Hexagon).
+
 ## 2.1.2
 
 Bumped [telldus](https://github.com/Hexagon/node-telldus) dependency to 1.0.0
