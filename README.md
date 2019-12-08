@@ -1,6 +1,6 @@
 # node-red-contrib-tellstick
 
-This is a full featured [Node-RED](http://nodered.org/) module to communicate with a [Tellstick](http://www.telldus.se/products/tellstick) or [Tellstick Duo](http://www.telldus.se/products/tellstick_duo).
+This is a full featured [Node-RED](http://nodered.org/) module to communicate with a [Tellstick](https://telldus.com/produkt/tellstick-net/) or [Tellstick Duo](https://telldus.com/).
 
 * Send data to a Tellstick, e.g. turning a lamp on (Available on both Tellstick and Tellstick Duo).
 * Recieve data from a (Tellstick compatible) transmitter, e.g a remote control or a temperature sensor (Only available on Tellstick Duo).
